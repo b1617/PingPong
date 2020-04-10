@@ -4,16 +4,13 @@ var game = {
   groundColor: "#000000",
   netWidth: 6,
   netColor: "#FFFFFF",
-  groundLayer: null,
-  scoreLayer: null,
-  playersBallLayer: null,
   scorePosPlayer1: 300,
   scorePosPlayer2: 365,
-
+  groundLayer: null,
   ball: {
     width: 10,
     height: 10,
-    color: "#FFCC00",
+    color: "#ffcc00",
     posX: 200,
     posY: 200,
     speed: 1,
@@ -42,38 +39,39 @@ var game = {
     width: 10,
     height: 50,
     color: "#FFFFFF",
-    posX: 10,
-    posY: 150,
+    posX: 30,
+    posY: 200,
     goUp: false,
-    goDown: false
+    goDown: false,
+    originalPosition: 'left'
   },
 
   playerTwo: {
     width: 10,
     height: 50,
     color: "#FFFFFF",
-    posX: 600,
-    posY: 150,
+    posX: 650,
+    posY: 200,
     goUp: false,
-    goDown: false
+    goDown: false,
+    originalPosition: 'right'
   },
 
   init: function () {
     this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, undefined, 0, "#000000", 0, 0);
+
     game.display.drawRectangleInLayer(this.groundLayer, this.netWidth, this.groundHeight, this.netColor, this.groundWidth / 2 - this.netWidth / 2, 0);
-
     this.scoreLayer = game.display.createLayer("score", this.groundWidth, this.groundHeight, undefined, 1, undefined, 0, 0);
-    game.display.drawTextInLayer(this.scoreLayer, "SCORE", "10px Arial", "#FF0000", 10, 10);
-
     this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, undefined, 2, undefined, 0, 0);
-    game.display.drawTextInLayer(this.playersBallLayer, "JOUEURSETBALLE", "10px Arial", "#FF0000", 100, 100);
 
     this.displayScore(0, 0);
     this.displayBall();
     this.displayPlayers();
-    this.initKeyboard(game.control.onKeyDown, game.control.onKeyUp);
-  },
 
+    this.initKeyboard(game.control.onKeyDown, game.control.onKeyUp);
+    this.initMouse(game.control.onMouseMove);
+    game.ia.setPlayerAndBall(this.playerTwo, this.ball);
+  },
   displayScore: function (scorePlayer1, scorePlayer2) {
     game.display.drawTextInLayer(this.scoreLayer, scorePlayer1, "60px Arial", "#FFFFFF", this.scorePosPlayer1, 55);
     game.display.drawTextInLayer(this.scoreLayer, scorePlayer2, "60px Arial", "#FFFFFF", this.scorePosPlayer2, 55);
@@ -100,16 +98,16 @@ var game = {
   movePlayers: function () {
     if (game.control.controlSystem == "KEYBOARD") {
       // keyboard control
-      if (game.playerOne.goUp) {
+      if (game.playerOne.goUp && game.playerOne.posY > 0) {
         game.playerOne.posY -= 5;
-      } else if (game.playerOne.goDown) {
+      } else if (game.playerOne.goDown && game.playerOne.posY < game.groundHeight - game.playerOne.height) {
         game.playerOne.posY += 5;
       }
     } else if (game.control.controlSystem == "MOUSE") {
       // mouse control
       if (game.playerOne.goUp && game.playerOne.posY > game.control.mousePointer)
         game.playerOne.posY -= 5;
-      else if (game.playerOne.goDown && game.playerOne.posY < game.control.mousePointer)
+      else if (game.playerOne.goDown && game.playerOne.posY < game.control.mousePointer && game.playerOne.posY < game.groundHeight - game.playerOne.height)
         game.playerOne.posY += 5;
     }
   },
@@ -122,4 +120,5 @@ var game = {
     if (this.ball.collide(game.playerTwo))
       game.ball.directionX = -game.ball.directionX;
   },
+
 };

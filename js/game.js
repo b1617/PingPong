@@ -13,7 +13,7 @@ var game = {
     color: "#ffcc00",
     posX: 200,
     posY: 200,
-    speed: 1,
+    speed: 5,
     directionX: 1,
     directionY: 1,
     move: function () {

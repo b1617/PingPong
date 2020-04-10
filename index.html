@@ -3,6 +3,8 @@
 <body></body>
 <script src="js/game.js"></script>
 <script src="js/game.display.js"></script>
+<script src="js/game.control.js"></script>
+<script src="js/game.keycode.js"></script>
 <script>
   (function () {
     // début du code isolé
@@ -17,6 +19,7 @@
     var main = function () {
       // le code du jeu
       game.clearLayer(game.playersBallLayer);
+      game.movePlayers();
       game.displayPlayers();
       game.moveBall();
       requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page

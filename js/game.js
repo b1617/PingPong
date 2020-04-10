@@ -13,9 +13,22 @@ var game = {
   ball: {
     width: 10,
     height: 10,
-    color: "#FFFFFF",
+    color: "#FFCC00",
     posX: 200,
-    posY: 200
+    posY: 200,
+    speed: 1,
+    directionX: 1,
+    directionY: 1,
+    move: function () {
+      this.posX += this.directionX * this.speed;
+      this.posY += this.directionY * this.speed;
+    },
+    bounce: function () {
+      if (this.posX > game.groundWidth || this.posX < 0)
+        this.directionX = -this.directionX;
+      if (this.posY > game.groundHeight || this.posY < 0)
+        this.directionY = -this.directionY;
+    },
   },
   playerOne: {
     width: 10,
@@ -58,5 +71,13 @@ var game = {
   displayPlayers: function () {
     game.display.drawRectangleInLayer(this.playersBallLayer, this.playerOne.width, this.playerOne.height, this.playerOne.color, this.playerOne.posX, this.playerOne.posY);
     game.display.drawRectangleInLayer(this.playersBallLayer, this.playerTwo.width, this.playerTwo.height, this.playerTwo.color, this.playerTwo.posX, this.playerTwo.posY);
+  },
+  moveBall: function () {
+    this.ball.move();
+    this.ball.bounce();
+    this.displayBall();
+  },
+  clearLayer: function (targetLayer) {
+    targetLayer.clear();
   }
 };

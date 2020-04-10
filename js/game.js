@@ -29,6 +29,14 @@ var game = {
       if (this.posY > game.groundHeight || this.posY < 0)
         this.directionY = -this.directionY;
     },
+    collide: function (anotherItem) {
+      if (!(this.posX >= anotherItem.posX + anotherItem.width || this.posX <= anotherItem.posX - this.width
+        || this.posY >= anotherItem.posY + anotherItem.height || this.posY <= anotherItem.posY - this.height)) {
+        // Collision
+        return true;
+      }
+      return false;
+    },
   },
   playerOne: {
     width: 10,
@@ -107,5 +115,11 @@ var game = {
   },
   initMouse: function (onMouseMoveFunction) {
     window.onmousemove = onMouseMoveFunction;
-  }
+  },
+  collideBallWithPlayersAndAction: function () {
+    if (this.ball.collide(game.playerOne))
+      game.ball.directionX = -game.ball.directionX;
+    if (this.ball.collide(game.playerTwo))
+      game.ball.directionX = -game.ball.directionX;
+  },
 };

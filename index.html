@@ -2,11 +2,11 @@
 
 <body>
 </body>
-<script src="./js/game.js"></script>
-<script src="./js/game.display.js"></script>
-<script src="./js/game.control.js"></script>
-<script src="./js/game.keycode.js"></script>
-<script src="./js/game.ia.js"></script>
+<script src="js/game.js"></script>
+<script src="js/game.display.js"></script>
+<script src="js/game.control.js"></script>
+<script src="js/game.keycode.js"></script>
+<script src="js/game.ai.js"></script>
 <script>
   (function () {
     // début du code isolé
@@ -24,7 +24,10 @@
       game.movePlayers();
       game.displayPlayers();
       game.moveBall();
-      game.ia.move();
+      if (game.ball.inGame) {
+        game.lostBall();
+      }
+      game.ai.move();
       game.collideBallWithPlayersAndAction();
       requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
     }
@@ -34,5 +37,7 @@
     // fin du code isolé
   })();
 </script>
+<div id="menu"><input id="startGame" type="button" value="Start Game"></div>
+<div id="divGame"></div>
 
 </html>

@@ -1,0 +1,27 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "Play Ping Pong",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SattiaDhinesh/PingPong.git"
+  },
+  "author": "Dhinesh Sattia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SattiaDhinesh/PingPong/issues"
+  },
+  "homepage": "https://github.com/SattiaDhinesh/PingPong#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}

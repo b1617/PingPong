@@ -1,7 +1,9 @@
-var game = {
+
+
+let game = {
   groundWidth: 700,
   groundHeight: 400,
-  groundColor: "#000000",
+  groundColor: "#318CE7",
   netWidth: 6,
   netColor: "#FFFFFF",
   groundLayer: null,
@@ -21,7 +23,7 @@ var game = {
   ball: {
     width: 10,
     height: 10,
-    color: "#FFFFFF",
+    color: "#FF2222",
     posX: 200,
     posY: 200,
     speed: 1,
@@ -36,14 +38,12 @@ var game = {
       }
     },
 
-    bounce: function (soundToPlay) {
+    bounce: function () {
       if (this.posX > game.groundWidth || this.posX < 0) {
         this.directionX = -this.directionX;
-        soundToPlay.play();
       }
       if (this.posY > game.groundHeight || this.posY < 0) {
         this.directionY = -this.directionY;
-        soundToPlay.play();
       }
     },
 
@@ -57,7 +57,7 @@ var game = {
     },
 
     lost: function (player) {
-      var returnValue = false;
+      let returnValue = false;
       if (player.originalPosition == "left" && this.posX < player.posX - this.width) {
         returnValue = true;
       } else if (player.originalPosition == "right" && this.posX > player.posX + player.width) {
@@ -101,13 +101,13 @@ var game = {
     this.divGame = document.getElementById("divGame");
     this.startGameButton = document.getElementById("startGame");
 
-    this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, this.divGame, 0, "#000000", 150, 50);
+    this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, this.divGame, 0, this.groundColor, 400, 190);
     game.display.drawRectangleInLayer(this.groundLayer, this.netWidth, this.groundHeight, this.netColor, this.groundWidth / 2 - this.netWidth / 2, 0);
 
-    this.scoreLayer = game.display.createLayer("score", this.groundWidth, this.groundHeight, this.divGame, 1, undefined, 150, 50);
+    this.scoreLayer = game.display.createLayer("score", this.groundWidth, this.groundHeight, this.divGame, 1, undefined, 400, 190);
     //game.display.drawTextInLayer(this.scoreLayer, "SCORE", "10px Arial", "#FF0000", 10, 10);
 
-    this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, this.divGame, 2, undefined, 150, 50);
+    this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, this.divGame, 2, undefined, 400, 190);
     //game.display.drawTextInLayer(this.playersBallLayer, "JOUEURSETBALLE", "10px Arial", "#FF0000", 100, 100);
 
     this.displayScore(0, 0);
@@ -118,7 +118,6 @@ var game = {
     this.initMouse(game.control.onMouseMove);
     this.initStartGameButton();
 
-    this.wallSound = new Audio("./sound/wall.ogg");
     this.playerSound = new Audio("./sound/player.ogg");
 
     game.speedUpBall();
@@ -151,7 +150,7 @@ var game = {
 
   moveBall: function () {
     this.ball.move();
-    this.ball.bounce(this.wallSound);
+    this.ball.bounce();
     this.displayBall();
   },
 
@@ -191,10 +190,12 @@ var game = {
   lostBall: function () {
     if (this.ball.lost(this.playerOne)) {
       this.playerTwo.score++;
-      if (this.playerTwo.score > 4) {
-        this.playerTwo.score = 'V';
+      if (this.playerTwo.score > 2) {
+
+        // this.playerTwo.score = 'V';
         this.gameOn = false;
         this.ball.inGame = false;
+        alert('Win Player 2');
       } else {
         this.ball.inGame = false;
 
@@ -204,10 +205,12 @@ var game = {
       }
     } else if (this.ball.lost(this.playerTwo)) {
       this.playerOne.score++;
-      if (this.playerOne.score > 4) {
-        this.playerOne.score = 'V';
+      if (this.playerOne.score > 2) {
+        // this.playerOne.score = 'V';
+
         this.gameOn = false;
         this.ball.inGame = false;
+        alert('Win Player 1');
       } else {
         this.ball.inGame = false;
 
@@ -223,8 +226,8 @@ var game = {
 
 
   ballOnPlayer: function (player, ball) {
-    var returnValue = "CENTER";
-    var playerPositions = player.height / 5;
+    let returnValue = "CENTER";
+    let playerPositions = player.height / 5;
     if (ball.posY > player.posY && ball.posY < player.posY + playerPositions) {
       returnValue = "TOP";
     } else if (ball.posY >= player.posY + playerPositions && ball.posY < player.posY + playerPositions * 2) {
@@ -242,6 +245,8 @@ var game = {
   initStartGameButton: function () {
     this.startGameButton.onclick = game.control.onStartGameClickButton;
   },
+
+
 
   reinitGame: function () {
     this.ball.inGame = false;
@@ -302,10 +307,12 @@ var game = {
     }
   },
 
+
+
   speedUpBall: function () {
     setInterval(function () {
       game.ball.speedUp();
-    }, 10000);
+    }, 1000);
   }
 
 };

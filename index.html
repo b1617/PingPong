@@ -1,43 +1,63 @@
-<html>
+<html lang="en">
 
-<body>
-</body>
-<script src="js/game.js"></script>
-<script src="js/game.display.js"></script>
-<script src="js/game.control.js"></script>
-<script src="js/game.keycode.js"></script>
-<script src="js/game.ai.js"></script>
-<script>
-  (function () {
-    // début du code isolé
-    var requestAnimId;
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ping Pong</title>
+</head>
 
-    var initialisation = function () {
-      // le code de l'initialisation
-      game.init();
-      requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
-    }
+<body style="background-color: white;">
+  <script src="js/game.js"></script>
+  <script src="js/game.display.js"></script>
+  <script src="js/game.control.js"></script>
+  <script src="js/game.keycode.js"></script>
+  <script src="js/game.ai.js"></script>
+  <script>
+    (function () {
+      // début du code isolé
+      let requestAnimId;
 
-    var main = function () {
-      // le code du jeu
-      game.clearLayer(game.playersBallLayer);
-      game.movePlayers();
-      game.displayPlayers();
-      game.moveBall();
-      if (game.ball.inGame) {
-        game.lostBall();
+      let initialisation = function () {
+        // le code de l'initialisation
+        game.init();
+        requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
       }
-      game.ai.move();
-      game.collideBallWithPlayersAndAction();
-      requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
-    }
 
-    window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
+      let main = function () {
+        // le code du jeu
+        game.clearLayer(game.playersBallLayer);
+        game.movePlayers();
+        game.displayPlayers();
+        game.moveBall();
+        if (game.ball.inGame) {
+          game.lostBall();
+        }
+        game.ai.move();
+        game.collideBallWithPlayersAndAction();
+        requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
+      }
 
-    // fin du code isolé
-  })();
-</script>
-<div id="menu"><input id="startGame" type="button" value="Start Game"></div>
-<div id="divGame"></div>
+      window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
+
+      // fin du code isolé
+    })();
+  </script>
+
+  <div id="divGame"></div>
+  <div>
+    <div class="jumbotron" style=" padding:10px; background-color: white; border: 3px solid red;">
+      <h1 class="display-4">Ping Pong!</h1>
+      <p class="lead">This is a simple hero unit, a simple jumbotron-style component .</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="#" id="startGame" role="button">Start
+          Game with AI</a>
+        <a class="btn btn-primary btn-lg" href="#" id="startGame" role="button">Start
+          Game with Friend</a>
+      </p>
+    </div>
+  </div>
+</body>
 
 </html>

@@ -100,15 +100,12 @@ let game = {
   init: function () {
     this.divGame = document.getElementById("divGame");
     this.startGameButton = document.getElementById("startGame");
-
-    this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, this.divGame, 0, this.groundColor, 400, 190);
+    this.restartGameButton = document.getElementById("restartGame");
+    this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, this.divGame, 0, this.groundColor, 500, 100);
     game.display.drawRectangleInLayer(this.groundLayer, this.netWidth, this.groundHeight, this.netColor, this.groundWidth / 2 - this.netWidth / 2, 0);
+    this.scoreLayer = game.display.createLayer("score", this.groundWidth, this.groundHeight, this.divGame, 1, undefined, 500, 100);
+    this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, this.divGame, 2, undefined, 500, 100);
 
-    this.scoreLayer = game.display.createLayer("score", this.groundWidth, this.groundHeight, this.divGame, 1, undefined, 400, 190);
-    //game.display.drawTextInLayer(this.scoreLayer, "SCORE", "10px Arial", "#FF0000", 10, 10);
-
-    this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, this.divGame, 2, undefined, 400, 190);
-    //game.display.drawTextInLayer(this.playersBallLayer, "JOUEURSETBALLE", "10px Arial", "#FF0000", 100, 100);
 
     this.displayScore(0, 0);
     this.displayBall();
@@ -191,14 +188,12 @@ let game = {
     if (this.ball.lost(this.playerOne)) {
       this.playerTwo.score++;
       if (this.playerTwo.score > 2) {
-
-        // this.playerTwo.score = 'V';
         this.gameOn = false;
         this.ball.inGame = false;
         alert('Win Player 2');
       } else {
         this.ball.inGame = false;
-
+        setTimeout(this.onStartGame(), 3000);
         if (this.playerOne.ai) {
           setTimeout(game.ai.startBall(), 3000);
         }
@@ -207,13 +202,12 @@ let game = {
       this.playerOne.score++;
       if (this.playerOne.score > 2) {
         // this.playerOne.score = 'V';
-
         this.gameOn = false;
         this.ball.inGame = false;
         alert('Win Player 1');
       } else {
         this.ball.inGame = false;
-
+        setTimeout(this.onStartGame(), 3000);
         if (this.playerTwo.ai) {
           setTimeout(game.ai.startBall(), 3000);
         }
@@ -243,10 +237,20 @@ let game = {
   },
 
   initStartGameButton: function () {
-    this.startGameButton.onclick = game.control.onStartGameClickButton;
+    this.startGameButton.onclick = game.control.onRestartGame;
   },
 
 
+  onStartGame: function () {
+    //game.reinitGame();
+    game.gameOn = true;
+    game.ball.inGame = true;
+    game.ball.posX = game.playerOne.posX + game.playerOne.width;
+    game.ball.posY = game.playerOne.posY;
+    game.ball.directionX = 1;
+    game.ball.directionY = 1;
+
+  },
 
   reinitGame: function () {
     this.ball.inGame = false;

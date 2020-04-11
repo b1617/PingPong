@@ -14,14 +14,6 @@ game.control = {
       game.playerOne.goUp = true;
       game.playerOne.goDown = false;
     }
-
-    if (event.keyCode == game.keycode.SPACEBAR && !game.ball.inGame && game.gameOn) {
-      game.ball.inGame = true;
-      game.ball.posX = game.playerOne.posX + game.playerOne.width;
-      game.ball.posY = game.playerOne.posY;
-      game.ball.directionX = 1;
-      game.ball.directionY = 1;
-    }
   },
 
   onKeyUp: function (event) {
@@ -53,10 +45,10 @@ game.control = {
     }
   },
 
-  onStartGameClickButton: function () {
-    if (!game.gameOn) {
-      game.reinitGame();
-      game.gameOn = true;
-    }
+
+  onRestartGame: function () {
+    game.reinitGame();
+    game.onStartGame();
   }
+
 }

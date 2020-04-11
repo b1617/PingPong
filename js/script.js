@@ -22,7 +22,39 @@
     }
     window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
     // fin du code isol
-    $('#startGame').click(() => {
-        $('#restartGame').css('display', 'inline');
+    let socket = io();
+    $('#create').click(() => {
+        $('#joinDiv').css('display', 'none');
+        $('#createDiv').css('display', 'none');
+        const username = $('#usernameCreate').val();
+        $('.players').css('display', 'block');
+        $('#player1').append(username);
+        socket.emit('creation', { username });
     });
+    socket.on('created', (data) => {
+        console.log(data.secretId);
+        $('#secretId').append(data.secretId);
+    });
+
+    $('#join').click(() => {
+        const username = $('#usernameJoin').val();
+        const secretId = $('#secretIdJoin').val();
+        $('#player1').append(username);
+        socket.emit('joining', { username, secretId });
+    });
+
+    socket.on('joined', (data) => {
+        console.log(data);
+        // Player 2 joined the game
+        $('#player2').text('Player 2 : ' + data.username);
+    });
+
+    socket.on('createPlayer2', (data) => {
+        $('#joinDiv').css('display', 'none');
+        $('#createDiv').css('display', 'none');
+        $('.players').css('display', 'block');
+        $('#secretId').append(data.secretId);
+        $('#player2').text('Player 2 ' + data.username);
+    });
+
 })();

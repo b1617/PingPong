@@ -31,13 +31,17 @@ io.on('connection', function (socket) {
         console.log(games);
         console.log('data joining ', data)
         socket.to(games[data.secretId].id).emit('joined', { username: data.username });
-        socket.emit('createPlayer2', { username: games[data.secretId].username, secretId: data.secretId });
+        socket.emit('createOnJoin', { username: games[data.secretId].username, secretId: data.secretId });
     });
 
     socket.on('disconnect', function () {
         console.log('user disconnected');
     });
 
+    socket.on('moveBall', function (data) {
+        const { x, y, speed } = data;
+        socket.broadcast.emit('moveBall', { x, y, speed });
+    });
 });
 
 server.listen(PORT, () => {

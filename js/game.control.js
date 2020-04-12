@@ -47,6 +47,7 @@ game.control = {
 
 
   onRestartGame: function () {
+    console.log('call on restart game');
     game.reinitGame();
     game.onStartGame();
   }

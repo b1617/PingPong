@@ -19,6 +19,7 @@ let game = {
   divGame: null,
   gameOn: false,
   startGameButton: null,
+  startGameWithFriend: null,
 
   ball: {
     width: 10,
@@ -100,6 +101,7 @@ let game = {
   init: function () {
     this.divGame = document.getElementById("divGame");
     this.startGameButton = document.getElementById("startGame");
+    this.startGameWithFriend = document.getElementById('startGameWithFriend');
     this.restartGameButton = document.getElementById("restartGame");
     this.groundLayer = game.display.createLayer("terrain", this.groundWidth, this.groundHeight, this.divGame, 0, this.groundColor, 500, 100);
     game.display.drawRectangleInLayer(this.groundLayer, this.netWidth, this.groundHeight, this.netColor, this.groundWidth / 2 - this.netWidth / 2, 0);
@@ -238,6 +240,7 @@ let game = {
 
   initStartGameButton: function () {
     this.startGameButton.onclick = game.control.onRestartGame;
+    this.startGameWithFriend.onclick = game.control.onRestartGame;
   },
 
 

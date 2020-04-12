@@ -49,12 +49,26 @@
         $('#player2').text('Player 2 : ' + data.username);
     });
 
-    socket.on('createPlayer2', (data) => {
+    socket.on('createOnJoin', (data) => {
         $('#joinDiv').css('display', 'none');
         $('#createDiv').css('display', 'none');
         $('.players').css('display', 'block');
         $('#secretId').append(data.secretId);
         $('#player2').text('Player 2 ' + data.username);
+    });
+
+    $('#startGameWithFriend').click(() => {
+        setInterval(() => {
+            socket.emit('moveBall', { x: game.ball.posX, y: game.ball.posY, speed: game.ball.speed });
+        });
+    });
+
+    socket.on('moveBall', (data) => {
+        console.log('ball move');
+        const { x, y, speed } = data;
+        game.ball.posX = x;
+        game.ball.posY = y;
+        game.ball.speed = speed;
     });
 
 })();

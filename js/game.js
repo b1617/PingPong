@@ -20,6 +20,7 @@ let game = {
   gameOn: false,
   startGameButton: null,
   startGameWithFriend: null,
+  mutli: false,
 
   ball: {
     width: 10,
@@ -189,7 +190,7 @@ let game = {
   lostBall: function () {
     if (this.ball.lost(this.playerOne)) {
       this.playerTwo.score++;
-      if (this.playerTwo.score > 2) {
+      if (this.playerTwo.score > 10) {
         this.gameOn = false;
         this.ball.inGame = false;
         alert('Win Player 2');
@@ -202,7 +203,7 @@ let game = {
       }
     } else if (this.ball.lost(this.playerTwo)) {
       this.playerOne.score++;
-      if (this.playerOne.score > 2) {
+      if (this.playerOne.score > 10) {
         // this.playerOne.score = 'V';
         this.gameOn = false;
         this.ball.inGame = false;
@@ -319,7 +320,7 @@ let game = {
   speedUpBall: function () {
     setInterval(function () {
       game.ball.speedUp();
-    }, 1000);
+    }, 10000);
   }
 
 };

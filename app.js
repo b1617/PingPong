@@ -42,6 +42,11 @@ io.on('connection', function (socket) {
         const { x, y, speed } = data;
         socket.broadcast.emit('moveBall', { x, y, speed });
     });
+
+    socket.on('movePlayer', function (data) {
+        const { y } = data;
+        socket.broadcast.emit('movePlayer', { y });
+    });
 });
 
 server.listen(PORT, () => {

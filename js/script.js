@@ -39,7 +39,7 @@
     $('#join').click(() => {
         const username = $('#usernameJoin').val();
         const secretId = $('#secretIdJoin').val();
-        $('#player1').append(username);
+        $('#player2').text('Player 2 ' + username);
         socket.emit('joining', { username, secretId });
     });
 
@@ -54,21 +54,33 @@
         $('#createDiv').css('display', 'none');
         $('.players').css('display', 'block');
         $('#secretId').append(data.secretId);
-        $('#player2').text('Player 2 ' + data.username);
+        $('#player1').append(data.username);
+        // we can start the second player move 
+        game.ball.posX = 500;
+        game.gameOn = true;
+        setInterval(() => {
+            socket.emit('movePlayer', { y: game.playerOne.posY });
+        });
     });
 
     $('#startGameWithFriend').click(() => {
         setInterval(() => {
             socket.emit('moveBall', { x: game.ball.posX, y: game.ball.posY, speed: game.ball.speed });
+            socket.emit('movePlayer', { y: game.playerOne.posY })
         });
     });
 
     socket.on('moveBall', (data) => {
         console.log('ball move');
         const { x, y, speed } = data;
-        game.ball.posX = x;
+        game.ball.posX = 700 - x;
         game.ball.posY = y;
         game.ball.speed = speed;
+    });
+
+    socket.on('movePlayer', (data) => {
+        const { y } = data;
+        game.playerTwo.posY = y;
     });
 
 })();

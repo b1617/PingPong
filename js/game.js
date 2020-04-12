@@ -95,7 +95,7 @@ let game = {
     goDown: false,
     originalPosition: "right",
     score: 0,
-    ai: true
+    ai: false,
   },
 
   init: function () {

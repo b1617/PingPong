@@ -7,24 +7,30 @@ game.ai = {
     this.ball = ball;
   },
 
+  setAIMode: function (flag) {
+    this.player.ai = flag;
+    console.log(this.player);
+  },
+
   move: function () {
-    if (this.ball.directionX == 1) {
+    console.log(this.player.ai);
+    if (this.ball.directionX == 1 && this.player.ai) {
       if (this.player.originalPosition == "right") {
         // follow
-        // this.followBall();
+        this.followBall();
       }
       if (this.player.originalPosition == "left") {
         // center
-        // this.goCenter();
+        this.goCenter();
       }
     } else {
       if (this.player.originalPosition == "right") {
         // center
-        // this.goCenter();
+        this.goCenter();
       }
       if (this.player.originalPosition == "left") {
         // follow
-        // this.followBall();
+        this.followBall();
       }
     }
 

@@ -23,6 +23,11 @@
     window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
     // fin du code isol
     let socket = io();
+
+    $('#startGame').click(() => {
+        game.ai.setAIMode(true);
+    });
+
     $('#create').click(() => {
         $('#joinDiv').css('display', 'none');
         $('#createDiv').css('display', 'none');
@@ -47,6 +52,7 @@
         console.log(data);
         // Player 2 joined the game
         $('#player2').text('Player 2 : ' + data.username);
+        $('#startGameWithFriend').css('display', 'block');
     });
 
     socket.on('createOnJoin', (data) => {
@@ -73,10 +79,6 @@
             socket.emit('moveBall', { x: game.ball.posX, y: game.ball.posY, speed: game.ball.speed });
             socket.emit('movePlayer', { y: game.playerOne.posY })
         });
-    });
-
-    socket.on('start', () => {
-        game.ball.inGame = true;
     });
 
     socket.on('moveBall', (data) => {

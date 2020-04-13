@@ -38,10 +38,6 @@ io.on('connection', function (socket) {
         console.log('user disconnected');
     });
 
-    socket.on('start', () => {
-        socket.broadcast.emit('start');
-    });
-
     socket.on('moveBall', function (data) {
         const { x, y, speed } = data;
         socket.broadcast.emit('moveBall', { x, y, speed });

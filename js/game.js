@@ -315,8 +315,6 @@ let game = {
     }
   },
 
-
-
   speedUpBall: function () {
     setInterval(function () {
       game.ball.speedUp();

@@ -39,12 +39,14 @@ let game = {
       }
     },
 
-    bounce: function () {
+    bounce: function (sound) {
       if (this.posX > game.groundWidth || this.posX < 0) {
         this.directionX = -this.directionX;
+        sound.play();
       }
       if (this.posY > game.groundHeight || this.posY < 0) {
         this.directionY = -this.directionY;
+        sound.play();
       }
     },
 
@@ -162,7 +164,7 @@ let game = {
     this.initMouse(game.control.onMouseMove);
     this.initStartGameButton();
 
-    this.playerSound = new Audio('./sound/player.ogg');
+    this.wallSound = new Audio('./sound/player.ogg');
 
     game.speedUpBall();
 
@@ -229,7 +231,7 @@ let game = {
 
   moveBall: function () {
     this.ball.move();
-    this.ball.bounce();
+    this.ball.bounce(this.wallSound);
     this.displayBall();
   },
 
@@ -268,11 +270,9 @@ let game = {
   collideBallWithPlayersAndAction: function () {
     if (this.ball.collide(game.playerOne)) {
       this.changeBallPath(game.playerOne, game.ball);
-      this.playerSound.play();
     }
     if (this.ball.collide(game.playerTwo)) {
       this.changeBallPath(game.playerTwo, game.ball);
-      this.playerSound.play();
     }
   },
 

@@ -17,10 +17,14 @@ const Game = class {
       this.playerSound = null,
       this.divGame = null,
       this.gameOn = false,
+      this.restartWinGameButton = null,
+      this.restartLostGameButton = null,
       this.startGameButton = null,
       this.startGameWithFriend = null,
       this.creator = false,
-      this.aiMode = false,
+      this.default = true,
+      this.single = false,
+      this.mutli = false,
       this.leftScore = 0,
       this.rightScore = 0,
       this.keycode = {
@@ -32,13 +36,12 @@ const Game = class {
       this.control = new Control(this)
   }
 
-
-
   init() {
     this.divGame = document.getElementById('divGame');
     this.startGameButton = document.getElementById('startGame');
     this.startGameWithFriend = document.getElementById('startGameWithFriend');
-    this.restartGameButton = document.getElementById('restartGame');
+    this.restartGameWinButton = document.getElementById('restartWin');
+    this.restartGameLostButton = document.getElementById('restartLost');
     this.groundLayer = new Display().createLayer(
       'terrain',
       this.groundWidth,
@@ -81,10 +84,9 @@ const Game = class {
       100
     );
 
-    this.displayScore(0, 0);
+    this.displayScore(this.leftScore, this.rightScore);
     this.displayBall();
     this.displayPlayers();
-    console.log(this.control)
     this.initKeyboard(this.control.onKeyDown, this.control.onKeyUp);
     this.initMouse(this.control.onMouseMove);
     this.initStartGameButton();
@@ -152,12 +154,16 @@ const Game = class {
   }
 
   initStartGameButton() {
-    this.startGameButton.onclick = this.control.onRestartGame;
-    this.startGameWithFriend.onclick = this.control.onRestartGame;
+    this.startGameButton.onclick = this.onStartGameWithAI;
+    this.restartGameLostButton.onclick = this.onRestartGame;
+    this.startGameWithFriend.onclick = this.onRestartGame;
+    this.restartGameWinButton.onclick = this.onRestartGame;
+
   }
 
   onStartGame(player) {
     //game.reinitGame();
+    console.log('on start game');
     this.gameOn = true;
     this.ball.inGame = true;
     this.ball.posX = player.posX + player.width;
@@ -167,31 +173,40 @@ const Game = class {
   }
 
   startBall(player) {
-    console.log(player);
     if (player.originalPosition === 'right') {
       this.ball.inGame = true;
       this.ball.posX = player.posX;
       this.ball.posY = player.posY;
-      this.ball.directionX = -1;
-      this.ball.directionY = 1;
+      this.ball.directionX = -1
+      this.ball.directionY = 1
     } else {
       this.ball.inGame = true;
       this.ball.posX = player.posX + player.width;
       this.ball.posY = player.posY;
-      this.ball.directionX = 1;
-      this.ball.directionY = 1;
+      this.ball.directionX = 1
+      this.ball.directionY = 1
     }
   }
+
+
   reinitGame() {
     this.ball.inGame = false;
     this.ball.speed = 1;
     this.leftScore = 0;
     this.rightScore = 0;
-    this.scoreLayer.clear();
+    this.clearLayer('SCORE');
     this.displayScore(this.leftScore.score, this.rightScore.score);
   }
 
-  onRestartGame() {
+  onStartGameWithAI = (e) => {
+    this.reinitGame();
+    this.default = false;
+    this.single = true;
+    this.players[0].ai = false;
+    this.onStartGame(this.players[0]);
+  }
+
+  onRestartGame = (e) => {
     console.log('call on restart this.game');
     this.reinitGame();
     this.onStartGame(this.players[0]);

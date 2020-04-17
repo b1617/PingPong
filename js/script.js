@@ -2,26 +2,43 @@
   let requestAnimId;
   let left = new Player(30, 200, 'left');
   let right = new Player(660, 200, 'right');
+
+  // Default game 
   let ball = new Ball();
-  let ai = new AI(ball);
+  let aiLeft = new AI(ball);
+  let aiRight = new AI(ball);
   let game = new Game(ball, [left, right]);
+
   ball.setGame(game);
-  ai.setPlayer(right);
+  aiLeft.setPlayer(left);
+  aiRight.setPlayer(right);
   game.init();
 
   let initialisation = function () {
     requestAnimId = window.requestAnimationFrame(main);
   };
   let main = function () {
-    // for Player vs AI
     game.clearLayer(game.playersBallLayer);
-    left.move(game.control, game.groundHeight);
     game.displayPlayers();
     game.moveBall();
     if (ball.inGame) {
       ball.lostBall();
     }
-    ai.move(game.groundHeight);
+    // Default
+    if (game.default) {
+      aiLeft.move(game.groundHeight);
+      aiRight.move(game.groundHeight);
+    } else if (game.single) {
+      // 1 vs AI 
+      left.move(game.control, game.groundHeight);
+      aiRight.move(game.groundHeight);
+    }
+    //  else {
+    //   // left.move(game.control, game.groundHeight);
+    // }
+
+    // 1 VS AI
+
     ball.collideBallWithPlayersAndAction(game.players);
     requestAnimId = window.requestAnimationFrame(main);
   };
@@ -29,24 +46,26 @@
 
   // let socket = io();
 
-  // $('#startGame').click(() => {
-  //   game.ai.setAIMode(true);
-  //   game.creator = true;
-  //   game.aiMode = true;
-  //   $('#win').css('display', 'none');
-  //   $('#lost').css('display', 'none');
-  // });
+  $('#startGame').click(() => {
+    // console.log('start new game vs AI');
+    // left.ai = false;
+    // game.creator = true;
+    // game.aiMode = false;
+    $('#win').css('display', 'none');
+    $('#lost').css('display', 'none');
+  });
 
-  // $('.btnRestart').click(() => {
-  //   $('#win').css('display', 'none');
-  //   $('#lose').css('display', 'none');
-  //   if (game.aiMode) {
-  //     game.control.onRestartGame();
-  //   } else {
-  //     socket.emit('restart');
-  //     game.control.onRestartGame();
-  //   }
-  // });
+  $('.btnRestart').click(() => {
+    console.log('call btnRestart');
+    $('#win').css('display', 'none');
+    $('#lost').css('display', 'none');
+    // if (game.aiMode) {
+    //   game.control.onRestartGame();
+    // } else {
+    //   socket.emit('restart');
+    //   game.control.onRestartGame();
+    // }
+  });
 
   // $('#create').click(() => {
   //   $('#startGame').prop('disabled', true);

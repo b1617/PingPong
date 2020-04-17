@@ -15,18 +15,28 @@ const Ball = class {
     lostBall() {
         for (let player of this.game.players) {
             if (this.lost(player)) {
-                player.originalPosition === 'left' ? this.game.leftScore++ : this.game.rightScore++;
-                if (this.game.leftScore === 3 || this.game.rightScore === 3) {
+                console.log('lost ball', player);
+                player.originalPosition === 'left' ? this.game.rightScore++ : this.game.leftScore++;
+                if (!this.game.default && (this.game.leftScore === 1 || this.game.rightScore === 1)) {
                     this.game.gameOn = false;
                     this.inGame = false;
+                    // we have to print winner 
+                    if (this.game.single) {
+                        let id = player.originalPosition === 'right' ? 'win' : 'lost';
+                        console.log('calling on lost ball');
+                        document.getElementById(id).style.display = 'block';
+                    }
                 } else {
                     this.inGame = false;
-                    // if mutli
-                    if (player.ai) {
-                        setTimeout(this.game.startBall(player), 3000);
-                    }
-                    else {
-                        setTimeout(this.game.onStartGame(player), 3000);
+                    if (this.game.single) {
+                        if (player.ai) {
+                            setTimeout(this.game.startBall(player), 3000);
+                        }
+                        else {
+                            setTimeout(this.game.onStartGame(player), 3000);
+                        }
+                    } else {
+                        console.log('todo mutli')
                     }
                 }
             }
@@ -173,6 +183,7 @@ const Ball = class {
         return returnValue;
     }
     speedUp() {
-        this.speed = this.speed + 0.0001;
+        let add = this.game.default ? 0.00001 : 0.0001
+        this.speed = this.speed + add;
     }
 }

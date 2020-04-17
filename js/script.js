@@ -33,11 +33,6 @@
       left.move(game.control, game.groundHeight);
       aiRight.move(game.groundHeight);
     }
-    //  else {
-    //   // left.move(game.control, game.groundHeight);
-    // }
-
-    // 1 VS AI
 
     ball.collideBallWithPlayersAndAction(game.players);
     requestAnimId = window.requestAnimationFrame(main);
@@ -46,26 +41,6 @@
 
   // let socket = io();
 
-  $('#startGame').click(() => {
-    // console.log('start new game vs AI');
-    // left.ai = false;
-    // game.creator = true;
-    // game.aiMode = false;
-    $('#win').css('display', 'none');
-    $('#lost').css('display', 'none');
-  });
-
-  $('.btnRestart').click(() => {
-    console.log('call btnRestart');
-    $('#win').css('display', 'none');
-    $('#lost').css('display', 'none');
-    // if (game.aiMode) {
-    //   game.control.onRestartGame();
-    // } else {
-    //   socket.emit('restart');
-    //   game.control.onRestartGame();
-    // }
-  });
 
   // $('#create').click(() => {
   //   $('#startGame').prop('disabled', true);

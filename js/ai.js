@@ -1,4 +1,4 @@
-const AI = class {
+class AI {
   constructor(ball) {
     this.player = null,
       this.ball = ball

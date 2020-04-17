@@ -1,4 +1,4 @@
-const Control = class {
+class Control {
 
   constructor(game) {
     this.mousePointer = null,

@@ -1,4 +1,4 @@
-const Display = class {
+class Display {
 
   constructor() {
     this.container = '',

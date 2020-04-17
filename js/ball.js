@@ -1,4 +1,4 @@
-const Ball = class {
+class Ball {
     constructor() {
         this.width = 10,
             this.height = 10,
@@ -9,11 +9,12 @@ const Ball = class {
             this.inGame = true,
             this.directionX = 1,
             this.directionY = 1,
-            this.game = null
+            this.game = null,
+            this.wallSound = new Audio('../sound/wall.ogg')
     }
 
     lostBall() {
-        for (let player of this.game.players) {
+        for (const player of this.game.players) {
             if (this.lost(player)) {
                 console.log('lost ball', player);
                 player.originalPosition === 'left' ? this.game.rightScore++ : this.game.leftScore++;
@@ -53,14 +54,14 @@ const Ball = class {
         }
     }
 
-    bounce(sound, width, height) {
+    bounce(width, height) {
         if (this.posX > width || this.posX < 0) {
             this.directionX = -this.directionX;
-            // sound.play();
+            if (!this.game.default) this.wallSound.play();
         }
         if (this.posY > height || this.posY < 0) {
             this.directionY = -this.directionY;
-            //   sound.play();
+            if (!this.game.default) this.wallSound.play();
         }
     }
 

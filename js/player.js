@@ -1,4 +1,4 @@
-const Player = class {
+class Player {
   constructor(posX, posY, originalPosition) {
     this.width = 10,
       this.height = 50,

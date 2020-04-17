@@ -1,5 +1,5 @@
 
-const Game = class {
+class Game {
 
   constructor(ball, players) {
     this.groundWidth = 700,
@@ -13,7 +13,6 @@ const Game = class {
       this.groundLayer = null,
       this.scorePosPlayer1 = 300,
       this.scorePosPlayer2 = 365,
-      this.wallSound = new Audio('./sound/player.ogg'),
       this.playerSound = null,
       this.divGame = null,
       this.gameOn = false,
@@ -103,7 +102,7 @@ const Game = class {
 
   moveBall() {
     this.ball.move();
-    this.ball.bounce(this.wallSound, this.groundWidth, this.groundHeight);
+    this.ball.bounce(this.groundWidth, this.groundHeight);
     this.displayBall();
   }
 

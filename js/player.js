@@ -11,6 +11,25 @@ class Player {
       this.ai = false
   }
 
+  setY(y) {
+    this.posY = y;
+  }
+
+  getY() {
+    return this.posY;
+  }
+
+  getX() {
+    return this.posX;
+  }
+
+  initPos() {
+    if (this.originalPosition === 'left') {
+      this.posY = 175;
+    } else {
+      this.posY = 175;
+    }
+  }
 
   move(control, groundHeight) {
     if (control.controlSystem == 'KEYBOARD') {

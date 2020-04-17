@@ -13,6 +13,20 @@ class Ball {
             this.wallSound = new Audio('../sound/wall.ogg')
     }
 
+    getPos() {
+        return { x: this.posX, y: this.posY };
+    }
+
+    setPos(x, y) {
+        this.posX = x;
+        this.posY = y;
+    }
+
+    initPos() {
+        this.posY = 200;
+        this.posX = 200;
+    }
+
     lostBall() {
         for (const player of this.game.players) {
             if (this.lost(player)) {
@@ -21,7 +35,6 @@ class Ball {
                 if (!this.game.default && (this.game.leftScore === 1 || this.game.rightScore === 1)) {
                     this.game.gameOn = false;
                     this.inGame = false;
-                    // we have to print winner 
                     if (this.game.single) {
                         let id = player.originalPosition === 'right' ? 'win' : 'lost';
                         console.log('calling on lost ball');
@@ -29,7 +42,7 @@ class Ball {
                     }
                 } else {
                     this.inGame = false;
-                    if (this.game.single) {
+                    if (this.game.single || this.game.default) {
                         if (player.ai) {
                             setTimeout(this.game.startBall(player), 3000);
                         }
@@ -47,7 +60,7 @@ class Ball {
     }
 
     move() {
-        if (this.inGame) {
+        if (this.inGame && (this.game.default || this.game.single || this.game.isCreator)) {
             this.posX += this.directionX * this.speed;
             this.posY += this.directionY * this.speed;
             this.speedUp();
@@ -57,11 +70,11 @@ class Ball {
     bounce(width, height) {
         if (this.posX > width || this.posX < 0) {
             this.directionX = -this.directionX;
-            if (!this.game.default) this.wallSound.play();
+            // if (!this.game.default) this.wallSound.play();
         }
         if (this.posY > height || this.posY < 0) {
             this.directionY = -this.directionY;
-            if (!this.game.default) this.wallSound.play();
+            // if (!this.game.default) this.wallSound.play();
         }
     }
 
@@ -184,7 +197,7 @@ class Ball {
         return returnValue;
     }
     speedUp() {
-        let add = this.game.default ? 0.00001 : 0.0001
+        let add = this.game.default ? 0.000001 : 0.0001
         this.speed = this.speed + add;
     }
 }

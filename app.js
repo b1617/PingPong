@@ -17,23 +17,38 @@ let games = {};
 
 io.on('connection', function (socket) {
   console.log('a user connected');
+
   socket.on('creation', function (data) {
+    console.log('creation', data);
     const key = Math.random().toString(36).substring(7);
-    games[key] = { id: socket.id, username: data.username };
+    games[key] = { players: [data.username], nbPlayers: data.nbPlayers };
+    const players = games[key].players;
+    socket.join(key)
     socket.emit('created', {
       username: data.username,
+      players,
       secretId: key
     });
   });
 
   socket.on('joining', function (data) {
-    socket
-      .to(games[data.secretId].id)
-      .emit('joined', { username: data.username });
-    socket.emit('createOnJoin', {
-      username: games[data.secretId].username,
-      secretId: data.secretId
-    });
+    console.log('joining', data);
+    console.log('find', games[data.secretId]);
+    const key = data.secretId;
+    if (games[key].players.length < games[key].nbPlayers) {
+      games[key].players.push(data.username);
+      socket.join(key);
+      socket.in(key).emit('joined',
+        { username: data.username, num: games[key].players.length, nbPlayers: games[key].nbPlayers });
+
+      socket.emit('createOnJoin', {
+        secretId: key,
+        players: games[key].players,
+        nbPlayers: games[key].nbPlayers
+      });
+    } else {
+      socket.emit('erreur');
+    }
   });
 
   socket.on('disconnect', function () {
@@ -41,13 +56,13 @@ io.on('connection', function (socket) {
   });
 
   socket.on('moveBall', function (data) {
-    const { x, y, speed } = data;
-    socket.broadcast.emit('moveBall', { x, y, speed });
+    const { x, y } = data;
+    socket.broadcast.emit('moveBall', { x, y });
   });
 
   socket.on('movePlayer', function (data) {
-    const { y } = data;
-    socket.broadcast.emit('movePlayer', { y });
+    const { y, n } = data;
+    socket.broadcast.emit('movePlayer', { y, n });
   });
 
   socket.on('score', function (data) {

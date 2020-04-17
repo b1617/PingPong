@@ -1,6 +1,5 @@
 
 class Game {
-
   constructor(ball, players) {
     this.groundWidth = 700,
       this.groundHeight = 400,
@@ -11,16 +10,16 @@ class Game {
       this.scoreLayer = null,
       this.playersBallLayer = null,
       this.groundLayer = null,
-      this.scorePosPlayer1 = 300,
-      this.scorePosPlayer2 = 365,
+      this.scorePosPlayer1 = 275,
+      this.scorePosPlayer2 = 390,
       this.playerSound = null,
       this.divGame = null,
-      this.gameOn = false,
+      this.gameOn = true,
       this.restartWinGameButton = null,
       this.restartLostGameButton = null,
       this.startGameButton = null,
       this.startGameWithFriend = null,
-      this.creator = false,
+      this.createGameWithFriend = null,
       this.default = true,
       this.single = false,
       this.mutli = false,
@@ -31,7 +30,14 @@ class Game {
         KEYUP: 38
       },
       this.ball = ball,
+
       this.players = players,
+      this.isCreator = false,
+      this.isBall = false,
+      this.isOne = false,
+      this.isTwo = false,
+      this.isThree = false,
+      this.isFour = false,
       this.control = new Control(this)
   }
 
@@ -39,6 +45,7 @@ class Game {
     this.divGame = document.getElementById('divGame');
     this.startGameButton = document.getElementById('startGame');
     this.startGameWithFriend = document.getElementById('startGameWithFriend');
+    this.createGameWithFriend = document.getElementById('create');
     this.restartGameWinButton = document.getElementById('restartWin');
     this.restartGameLostButton = document.getElementById('restartLost');
     this.groundLayer = new Display().createLayer(
@@ -155,9 +162,7 @@ class Game {
   initStartGameButton() {
     this.startGameButton.onclick = this.onStartGameWithAI;
     this.restartGameLostButton.onclick = this.onRestartGame;
-    this.startGameWithFriend.onclick = this.onRestartGame;
     this.restartGameWinButton.onclick = this.onRestartGame;
-
   }
 
   onStartGame(player) {
@@ -171,6 +176,7 @@ class Game {
     this.ball.directionY = 1;
   }
 
+
   startBall(player) {
     if (player.originalPosition === 'right') {
       this.ball.inGame = true;
@@ -180,13 +186,12 @@ class Game {
       this.ball.directionY = 1
     } else {
       this.ball.inGame = true;
-      this.ball.posX = player.posX + player.width;
+      this.ball.posX = player.posX;
       this.ball.posY = player.posY;
       this.ball.directionX = 1
       this.ball.directionY = 1
     }
   }
-
 
   reinitGame() {
     this.ball.inGame = false;
@@ -194,7 +199,7 @@ class Game {
     this.leftScore = 0;
     this.rightScore = 0;
     this.clearLayer('SCORE');
-    this.displayScore(this.leftScore.score, this.rightScore.score);
+    this.displayScore(this.leftScore, this.rightScore);
   }
 
   onStartGameWithAI = (e) => {
@@ -202,7 +207,31 @@ class Game {
     this.default = false;
     this.single = true;
     this.players[0].ai = false;
+    for (let player of this.players) player.initPos();
     this.onStartGame(this.players[0]);
+  }
+
+
+  onStartGameWithoutAI(player) {
+    this.reinitGame();
+    this.default = false;
+    this.single = false;
+    this.mutli = true;
+    this.isCreator = true;
+    player.ai = false;
+    this.gameOn = true;
+    this.startBall(player);
+  }
+
+  onStartJoinWithoutAi(player) {
+    this.reinitGame();
+    this.default = false;
+    this.single = false;
+    this.mutli = true;
+    this.gameOn = true;
+    player.ai = false;
+    player.initPos();
+    this.onStartGame(player);
   }
 
   onRestartGame = (e) => {

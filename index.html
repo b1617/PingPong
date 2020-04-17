@@ -19,7 +19,7 @@
   <div id="divGame"></div>
 
   <div class="wrapper">
-    <div class="jumbotron jumbotron" style="padding: 50px; height: 100vh;">
+    <div class="jumbotron jumbotron" style="padding: 30px 50px 50px 50px; height: 100vh;">
       <div class="container">
         <h1 class="display-4">Ping Pong</h1>
         <p class="lead">Play with AI.</p>
@@ -33,6 +33,16 @@
         <p class="lead">Play with friend.</p>
         <div id="createDiv">
           <h5>Create game</h5>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" style="background-color: #318CE7; color: white;"
+                for="nbPlayers">Players</label>
+            </div>
+            <select class="custom-select" id="nbPlayers">
+              <option value="2" selected>Two</option>
+              <option value="4">Four</option>
+            </select>
+          </div>
           <div class="input-group mb-3">
             <input type="text" name="user" id="usernameCreate" class="form-control" placeholder="Username"
               aria-label="Username" aria-describedby="basic-addon2" />
@@ -56,8 +66,11 @@
       </div>
       <div class="container players" style="display: none;">
         <h4 id="secretId">Secret key :&nbsp;</h4>
-        <p class="lead" id="player1">Player 1 :&nbsp;</p>
-        <p class="lead" id="player2">Player 2 : Waiting..</p>
+        <p class="lead two" id="player1">Player 1 :&nbsp;</p>
+        <p class="lead two" id="player2">Player 2 :&nbsp;</p>
+        <p class="lead four" id="player3">Player 3 :&nbsp;</p>
+        <p class="lead four" id="player4">Player 4 :&nbsp;</p>
+
         <button type="button" id="startGameWithFriend" class="btn btn-primary" style="width: 100%; display: none;">
           Start
         </button>
@@ -98,6 +111,5 @@
 <script src="js/player.js"></script>
 <script src="js/ball.js"></script>
 <script src="js/script.js"></script>
-<script src="js/jquery.js"></script>
 
 </html>

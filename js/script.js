@@ -1,17 +1,22 @@
 (function () {
   let requestAnimId;
-  let left = new Player(30, 200, 'left');
-  let right = new Player(660, 200, 'right');
+
+  const socket = io();
+  let leftTop = new Player(30, 175, 'left');
+  let rightTop = new Player(660, 175, 'right');
+
+  // let leftDown = new Player(30, 300, 'left');
+  // let rightDown = new Player(660, 300, 'right');
 
   // Default game 
   let ball = new Ball();
   let aiLeft = new AI(ball);
   let aiRight = new AI(ball);
-  let game = new Game(ball, [left, right]);
+  let game = new Game(ball, [leftTop, rightTop]);
 
   ball.setGame(game);
-  aiLeft.setPlayer(left);
-  aiRight.setPlayer(right);
+  aiLeft.setPlayer(leftTop);
+  aiRight.setPlayer(rightTop);
   game.init();
 
   let initialisation = function () {
@@ -30,73 +35,140 @@
       aiRight.move(game.groundHeight);
     } else if (game.single) {
       // 1 vs AI 
-      left.move(game.control, game.groundHeight);
+      leftTop.move(game.control, game.groundHeight);
       aiRight.move(game.groundHeight);
-    }
+    } else if (game.mutli) {
+      if (game.isCreator) {
+        socket.emit('moveBall', ball.getPos())
+      }
 
+      if (game.isOne) {
+        leftTop.move(game.control, game.groundHeight);
+        socket.emit('movePlayer', { y: leftTop.getY(), n: 1 })
+      } else if (game.isTwo) {
+        rightTop.move(game.control, game.groundHeight);
+        socket.emit('movePlayer', { y: rightTop.getY(), n: 2 })
+      }
+      // leftTop.move(game.control, game.groundHeight);
+    }
     ball.collideBallWithPlayersAndAction(game.players);
     requestAnimId = window.requestAnimationFrame(main);
   };
   window.onload = initialisation;
 
-  // let socket = io();
+  // set up 
+  $('#startGame').click(() => {
+    $('#win').css('display', 'none');
+    $('#lost').css('display', 'none');
+  });
 
+  $('.btnRestart').click(() => {
+    $('#win').css('display', 'none');
+    $('#lost').css('display', 'none');
+    // if (game.aiMode) {
+    //   game.control.onRestartGame();
+    // } else {
+    //   socket.emit('restart');
+    //   game.control.onRestartGame();
+    // }
+  });
 
-  // $('#create').click(() => {
-  //   $('#startGame').prop('disabled', true);
-  //   $('#joinDiv').css('display', 'none');
-  //   $('#createDiv').css('display', 'none');
-  //   const username = $('#usernameCreate').val();
-  //   $('.players').css('display', 'block');
-  //   $('#player1').append(username);
-  //   socket.emit('creation', { username });
-  // });
-  // socket.on('created', (data) => {
-  //   $('#secretId').append(data.secretId);
-  // });
+  // Etape 1 : create game
+  $('#create').click(() => {
+    $('#startGame').prop('disabled', true);
+    $('#joinDiv').css('display', 'none');
+    $('#createDiv').css('display', 'none');
+    const username = $('#usernameCreate').val();
+    const nbPlayers = $('#nbPlayers').val();
+    if (nbPlayers == '2') $('.four').css('display', 'none');
+    // set as creator 
+    $('.players').css('display', 'block');
+    $('#player1').append(username);
 
-  // $('#join').click(() => {
-  //   const username = $('#usernameJoin').val();
-  //   const secretId = $('#secretIdJoin').val();
-  //   $('#player2').text('Player 2 ' + username);
-  //   socket.emit('joining', { username, secretId });
-  // });
+    // create default pos
+    // game.onStartGameWithoutAI(leftTop);
+    socket.emit('creation', { username, nbPlayers });
+  });
 
-  // socket.on('joined', (data) => {
-  //   $('#player2').text('Player 2 : ' + data.username);
-  //   $('#startGameWithFriend').css('display', 'block');
-  // });
+  //  Receive secret key
+  socket.on('created', (data) => {
+    console.log('created', data);
+    game.onStartJoinWithoutAi(leftTop);
+    game.control.setPlayer(leftTop);
+    game.isOne = true;
+    game.isBall = true;
+    $('#secretId').append(data.secretId);
+    $('#startGameWithFriend').css('display', 'block');
+  });
 
-  // socket.on('createOnJoin', (data) => {
-  //   $('#joinDiv').css('display', 'none');
-  //   $('#createDiv').css('display', 'none');
-  //   $('.players').css('display', 'block');
-  //   $('#secretId').append(data.secretId);
-  //   $('#player1').append(data.username);
-  //   $('#startGameWithFriend').css('display', 'none');
-  //   $('.btnRestart').css('display', 'none');
-  //   game.ball.posX = 500;
-  //   game.gameOn = true;
-  //   setInterval(() => {
-  //     socket.emit('movePlayer', { y: game.playerOne.posY });
-  //   });
-  // });
-  // let timer = null;
-  // $('#startGameWithFriend').click(() => {
-  //   game.creator = true;
-  //   timer = setInterval(() => {
-  //     socket.emit('moveBall', {
-  //       x: game.ball.posX,
-  //       y: game.ball.posY,
-  //       speed: game.ball.speed
-  //     });
-  //     socket.emit('movePlayer', { y: game.playerOne.posY });
-  //     socket.emit('score', {
-  //       s1: game.playerOne.score,
-  //       s2: game.playerTwo.score
-  //     });
-  //   });
-  // });
+  // Join with key and username
+  $('#join').click(() => {
+    const username = $('#usernameJoin').val();
+    const secretId = $('#secretIdJoin').val();
+    socket.emit('joining', { username, secretId });
+  });
+
+  // joined the game
+  socket.on('joined', (data) => {
+    console.log(data);
+    $(`#player${data.num}`).append(data.username);
+    if (data.num == parseInt(data.nbPlayers)) {
+      $('#startGameWithFriend').prop('disabled', false);
+    }
+  });
+
+  socket.on('erreur', () => {
+    console.log('errr');
+  })
+
+  socket.on('createOnJoin', (data) => {
+    console.log('create on join ', data);
+    $('#startGame').prop('disabled', true);
+    $('#joinDiv').css('display', 'none');
+    $('#createDiv').css('display', 'none');
+    $('.players').css('display', 'block');
+    $('#secretId').append(data.secretId);
+    $('#startGameWithFriend').css('display', 'none');
+    $('.btnRestart').css('display', 'none');
+    if (data.nbPlayers == '2') $('.four').css('display', 'none');
+    const len = data.players.length;
+    for (let i = 1; i <= len; ++i) {
+      $(`#player${i}`).append(data.players[i - 1]);
+    }
+    console.log(len);
+    if (len == 2) {
+      game.onStartJoinWithoutAi(rightTop);
+      game.control.setPlayer(rightTop);
+      game.isTwo = true;
+    } else if (len == 3) {
+      game.onStartJoinWithoutAI(rightTop);
+      game.control.setPlayer(rightTop);
+      game.isThree = true;
+    } else {
+      game.onStartJoinWithoutAI(rightTop);
+      game.control.setPlayer(rightTop);
+      game.isFour = true;
+    }
+  });
+
+  socket.on('moveBall', (data) => {
+    const { x, y } = data;
+    ball.setPos(x, y);
+  });
+
+  socket.on('movePlayer', (data) => {
+    const { y, n } = data;
+    game.players[n - 1].setY(y);
+  });
+
+  $('#startGameWithFriend').click(() => {
+    game.onStartGameWithoutAI(leftTop);
+    //   socket.emit('score', {
+    //     s1: game.playerOne.score,
+    //     s2: game.playerTwo.score
+    //   });
+    // });
+  });
 
   // $('#score').change(() => {
   //   console.log('ss');
@@ -106,17 +178,7 @@
   //   });
   // });
 
-  // socket.on('moveBall', (data) => {
-  //   const { x, y, speed } = data;
-  //   game.ball.posX = game.groundWidth - x;
-  //   game.ball.posY = y;
-  //   game.ball.speed = speed;
-  // });
 
-  // socket.on('movePlayer', (data) => {
-  //   const { y } = data;
-  //   game.playerTwo.posY = y;
-  // });
 
   // socket.on('restart', (data) => {
   //   $('#win').css('display', 'none');

@@ -1,32 +1,22 @@
-game.display = {
-  container: '',
+const Display = class {
 
-  layer: {
-    name: '',
-    canvas: '',
-    context2D: '',
-    posX: null,
-    posY: null,
-    width: '',
-    height: '',
-    backgroundColor: '',
-    zIndex: '',
+  constructor() {
+    this.container = '',
+      this.layer = {
+        name: '',
+        canvas: '',
+        context2D: '',
+        posX: null,
+        posY: null,
+        width: '',
+        height: '',
+        backgroundColor: '',
+        zIndex: ''
+      }
+  }
 
-    clear: function () {
-      this.context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-  },
 
-  createLayer: function (
-    name,
-    width,
-    height,
-    htmlContainer,
-    zIndex,
-    backgroundColor,
-    x,
-    y
-  ) {
+  createLayer(name, width, height, htmlContainer, zIndex, backgroundColor, x, y) {
     let layer = Object.create(this.layer);
 
     layer.canvas = window.document.createElement('canvas');
@@ -65,16 +55,17 @@ game.display = {
     layer.context2D = layer.canvas.getContext('2d');
 
     return layer;
-  },
+  }
 
-  drawRectangleInLayer: function (targetLayer, width, heigth, color, x, y) {
-    targetLayer.context2D.fillStyle = color;
-    targetLayer.context2D.fillRect(x, y, width, heigth);
-  },
-
-  drawTextInLayer: function (targetLayer, text, font, color, x, y) {
+  drawTextInLayer(targetLayer, text, font, color, x, y) {
     targetLayer.context2D.font = font;
     targetLayer.context2D.fillStyle = color;
     targetLayer.context2D.fillText(text, x, y);
   }
+
+  drawRectangleInLayer(targetLayer, width, heigth, color, x, y) {
+    targetLayer.context2D.fillStyle = color;
+    targetLayer.context2D.fillRect(x, y, width, heigth);
+  }
+
 };

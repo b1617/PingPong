@@ -13,7 +13,7 @@ Steps to create an online game :
 
 1. Player 1 : Create a game with **2** or **4** players and send the **secret key** to your friends.
 2. Player 2 : Enter the **secret key** to join the game.
-3. Player 1 : Press the start button to play.
+3. Player 1 : Press the start button to **play**.
 
 ## Installation
 

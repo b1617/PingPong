@@ -1,43 +1,44 @@
-
 class Game {
   constructor(ball, players) {
-    this.groundWidth = 700,
-      this.groundHeight = 400,
-      this.groundColor = '#318CE7',
-      this.netWidth = 6,
-      this.netColor = '#FFFFFF',
-      this.groundLayer = null,
-      this.scoreLayer = null,
-      this.playersBallLayer = null,
-      this.groundLayer = null,
-      this.scorePosPlayer1 = 275,
-      this.scorePosPlayer2 = 390,
-      this.playerSound = null,
-      this.divGame = null,
-      this.gameOn = true,
-      this.restartWinGameButton = null,
-      this.restartLostGameButton = null,
-      this.startGameButton = null,
-      this.startGameWithFriend = null,
-      this.default = true,
-      this.single = false,
-      this.mutli = false,
-      this.leftScore = 0,
-      this.rightScore = 0,
-      this.keycode = {
+    (this.groundWidth = 700),
+      (this.groundHeight = 400),
+      (this.groundColor = '#318CE7'),
+      (this.netWidth = 6),
+      (this.netColor = '#FFFFFF'),
+      (this.groundLayer = null),
+      (this.scoreLayer = null),
+      (this.playersBallLayer = null),
+      (this.groundLayer = null),
+      (this.scorePosPlayer1 = 275),
+      (this.scorePosPlayer2 = 390),
+      (this.playerSound = null),
+      (this.divGame = null),
+      (this.gameOn = true),
+      (this.restartWinGameButton = null),
+      (this.restartLostGameButton = null),
+      (this.startGameButton = null),
+      (this.startGameWithFriend = null),
+      (this.default = true),
+      (this.single = false),
+      (this.mutli = false),
+      (this.leftScore = 0),
+      (this.rightScore = 0),
+      (this.keycode = {
         KEYDOWN: 40,
-        KEYUP: 38
-      },
-      this.ball = ball,
-      this.secretId = null,
-      this.players = players,
-      this.isCreator = false,
-      this.isBall = false,
-      this.isOne = false,
-      this.isTwo = false,
-      this.isThree = false,
-      this.isFour = false,
-      this.control = new Control(this)
+        KEYUP: 38,
+        SPACE: 32
+      }),
+      (this.ball = ball),
+      (this.secretId = null),
+      (this.players = players),
+      (this.isCreator = false),
+      (this.isBall = false),
+      (this.isOne = false),
+      (this.isTwo = false),
+      (this.isThree = false),
+      (this.started = false),
+      (this.isFour = false),
+      (this.control = new Control(this));
   }
 
   init() {
@@ -167,8 +168,14 @@ class Game {
   }
 
   clearLayer(type) {
-    const targetLayer = type === 'SCORE' ? this.scoreLayer : this.playersBallLayer;
-    targetLayer.context2D.clearRect(0, 0, targetLayer.canvas.width, targetLayer.canvas.height);
+    const targetLayer =
+      type === 'SCORE' ? this.scoreLayer : this.playersBallLayer;
+    targetLayer.context2D.clearRect(
+      0,
+      0,
+      targetLayer.canvas.width,
+      targetLayer.canvas.height
+    );
   }
 
   initStartGameButton() {
@@ -186,20 +193,19 @@ class Game {
     this.ball.directionY = 1;
   }
 
-
   startBall(player) {
     if (player.originalPosition === 'right') {
       this.ball.inGame = true;
       this.ball.posX = player.posX;
       this.ball.posY = player.posY;
-      this.ball.directionX = -1
-      this.ball.directionY = 1
+      this.ball.directionX = -1;
+      this.ball.directionY = 1;
     } else {
       this.ball.inGame = true;
       this.ball.posX = player.posX;
       this.ball.posY = player.posY;
-      this.ball.directionX = 1
-      this.ball.directionY = 1
+      this.ball.directionX = 1;
+      this.ball.directionY = 1;
     }
   }
 
@@ -219,8 +225,7 @@ class Game {
     this.players[0].ai = false;
     for (let player of this.players) player.initPos();
     this.onStartGame(this.players[0]);
-  }
-
+  };
 
   onStartGameWithoutAI(player) {
     this.reinitGame();
@@ -248,5 +253,5 @@ class Game {
   onRestartGame = (e) => {
     this.reinitGame();
     this.onStartGame(this.players[0]);
-  }
-};
+  };
+}

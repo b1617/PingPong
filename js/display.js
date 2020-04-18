@@ -1,8 +1,7 @@
 class Display {
-
   constructor() {
-    this.container = '',
-      this.layer = {
+    (this.container = ''),
+      (this.layer = {
         name: '',
         canvas: '',
         context2D: '',
@@ -12,11 +11,19 @@ class Display {
         height: '',
         backgroundColor: '',
         zIndex: ''
-      }
+      });
   }
 
-
-  createLayer(name, width, height, htmlContainer, zIndex, backgroundColor, x, y) {
+  createLayer(
+    name,
+    width,
+    height,
+    htmlContainer,
+    zIndex,
+    backgroundColor,
+    x,
+    y
+  ) {
     let layer = Object.create(this.layer);
 
     layer.canvas = window.document.createElement('canvas');
@@ -67,5 +74,4 @@ class Display {
     targetLayer.context2D.fillStyle = color;
     targetLayer.context2D.fillRect(x, y, width, heigth);
   }
-
-};
+}

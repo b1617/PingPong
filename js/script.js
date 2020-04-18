@@ -1,13 +1,12 @@
 (function () {
   let requestAnimId;
-
   const socket = io();
   let leftTop = new Player(30, 175, 'left', '#FFFF00');
   let rightTop = new Player(660, 175, 'right', '#0000CC');
   let leftDown = new Player(30, 300, 'left', '#CC0000');
   let rightDown = new Player(660, 300, 'right', '#33FF66');
 
-  // Default game 
+  // Default game
   let ball = new Ball();
   let aiLeft = new AI(ball);
   let aiRight = new AI(ball);
@@ -25,36 +24,60 @@
     game.clearLayer(game.playersBallLayer);
     game.displayPlayers();
     game.moveBall();
-    if (ball.inGame && (game.single || game.default || (game.mutli && game.isCreator))) {
+    if (
+      ball.inGame &&
+      (game.single || game.default || (game.mutli && game.isCreator))
+    ) {
       ball.lostBall();
     }
-    // Default
+
     if (game.default) {
       aiLeft.move(game.groundHeight);
       aiRight.move(game.groundHeight);
     } else if (game.single) {
-      // 1 vs AI 
       leftTop.move(game.control, game.groundHeight);
       aiRight.move(game.groundHeight);
     } else if (game.mutli) {
       if (game.isCreator) {
-        socket.emit('information', { key: game.secretId, x: ball.getX(), y: ball.getY(), s1: game.leftScore, s2: game.rightScore })
+        socket.emit('information', {
+          key: game.secretId,
+          x: ball.getX(),
+          y: ball.getY(),
+          s1: game.leftScore,
+          s2: game.rightScore
+        });
       }
       if (game.isOne) {
         leftTop.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: leftTop.getY(), n: 1, key: game.secretId })
+        socket.emit('movePlayer', {
+          y: leftTop.getY(),
+          n: 1,
+          key: game.secretId
+        });
       } else if (game.isTwo) {
         game.isWin();
         rightTop.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: rightTop.getY(), n: 2, key: game.secretId })
+        socket.emit('movePlayer', {
+          y: rightTop.getY(),
+          n: 2,
+          key: game.secretId
+        });
       } else if (game.isThree) {
         game.isWin();
         leftDown.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: leftDown.getY(), n: 3, key: game.secretId })
+        socket.emit('movePlayer', {
+          y: leftDown.getY(),
+          n: 3,
+          key: game.secretId
+        });
       } else if (game.isFour) {
         game.isWin();
         rightDown.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: rightDown.getY(), n: 4, key: game.secretId })
+        socket.emit('movePlayer', {
+          y: rightDown.getY(),
+          n: 4,
+          key: game.secretId
+        });
       }
     }
     ball.collideBallWithPlayersAndAction(game.players);
@@ -62,7 +85,6 @@
   };
   window.onload = initialisation;
 
-  // set up 
   $('#startGame').click(() => {
     $('#win').css('display', 'none');
     $('#lost').css('display', 'none');
@@ -76,8 +98,6 @@
     }
   });
 
-  // Etape 1 : create game
-
   $('#create').click(() => {
     const username = $('#usernameCreate').val();
     if (username.length > 0) {
@@ -90,15 +110,12 @@
       } else {
         game.players.push(...[leftDown, rightDown]);
       }
-      // set as creator 
       $('.players').css('display', 'block');
       $('#player1').append(username);
-
       socket.emit('creation', { username, nbPlayers });
     }
   });
 
-  //  Receive secret key
   socket.on('created', (data) => {
     console.log('created', data);
     game.onStartJoinWithoutAi(leftTop);
@@ -110,7 +127,6 @@
     $('#startGameWithFriend').css('display', 'block');
   });
 
-  // Join with key and username
   $('#join').click(() => {
     const username = $('#usernameJoin').val();
     const secretId = $('#secretIdJoin').val();
@@ -119,19 +135,25 @@
     }
   });
 
-  // joined the game
   socket.on('joined', (data) => {
     console.log(data);
     $(`#player${data.num}`).append(data.username);
-    socket.emit('information', { x: ball.getX(), y: ball.getY(), key: game.secretId, s1: game.leftScore, s2: game.rightScore });
+    socket.emit('information', {
+      x: ball.getX(),
+      y: ball.getY(),
+      key: game.secretId,
+      s1: game.leftScore,
+      s2: game.rightScore
+    });
     if (data.num == parseInt(data.nbPlayers)) {
       $('#startGameWithFriend').prop('disabled', false);
     }
   });
 
-  socket.on('erreur', () => {
+  socket.on('erreur', (data) => {
     console.log('errr');
-  })
+    alert(data.message);
+  });
 
   socket.on('createOnJoin', (data) => {
     console.log('create on join ', data);
@@ -173,8 +195,10 @@
     const { x, y, s1, s2 } = data;
     ball.setPos(x, y);
     if (lastScore.s1 !== s1 || lastScore.s2 !== s2) {
-      lastScore.s1 = s1; lastScore.s2 = s2;
-      game.leftScore = s1; game.rightScore = s2;
+      lastScore.s1 = s1;
+      lastScore.s2 = s2;
+      game.leftScore = s1;
+      game.rightScore = s2;
       game.clearLayer('SCORE');
       game.displayScore(s1, s2);
     }

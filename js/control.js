@@ -1,10 +1,9 @@
 class Control {
-
   constructor(game) {
-    this.mousePointer = null,
-      this.controlSystem = null,
-      this.game = game,
-      this.player = null;
+    (this.mousePointer = null),
+      (this.controlSystem = null),
+      (this.game = game),
+      (this.player = null);
   }
 
   setPlayer(player) {
@@ -20,18 +19,26 @@ class Control {
     } else if (event.keyCode == this.game.keycode.KEYUP && this.game.gameOn) {
       this.player.goUp = true;
       this.player.goDown = false;
+    } else if (
+      event.keyCode === this.game.keycode.SPACE &&
+      this.game.gameOn &&
+      this.game.isOne &&
+      !this.game.started
+    ) {
+      console.log('spca');
+      this.game.started = true;
+      this.game.onStartGameWithoutAI(this.player);
     }
-  }
+  };
 
   onKeyUp = (event) => {
-
     if (!this.player) this.player = this.game.players[0];
     if (event.keyCode == this.game.keycode.KEYDOWN) {
       this.player.goDown = false;
     } else if (event.keyCode == this.game.keycode.KEYUP) {
       this.player.goUp = false;
     }
-  }
+  };
 
   onMouseMove = (event) => {
     this.controlSystem = 'MOUSE';
@@ -49,5 +56,5 @@ class Control {
       this.player.goDown = false;
       this.player.goUp = false;
     }
-  }
+  };
 }

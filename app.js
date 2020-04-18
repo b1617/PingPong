@@ -20,7 +20,7 @@ io.on('connection', function (socket) {
     const key = Math.random().toString(36).substring(7);
     games[key] = { players: [data.username], nbPlayers: data.nbPlayers };
     const players = games[key].players;
-    socket.join(key)
+    socket.join(key);
     socket.emit('created', {
       username: data.username,
       players,
@@ -35,8 +35,11 @@ io.on('connection', function (socket) {
     if (games[key] && games[key].players.length < games[key].nbPlayers) {
       games[key].players.push(data.username);
       socket.join(key);
-      socket.in(key).emit('joined',
-        { username: data.username, num: games[key].players.length, nbPlayers: games[key].nbPlayers });
+      socket.in(key).emit('joined', {
+        username: data.username,
+        num: games[key].players.length,
+        nbPlayers: games[key].nbPlayers
+      });
 
       socket.emit('createOnJoin', {
         secretId: key,
@@ -44,7 +47,7 @@ io.on('connection', function (socket) {
         nbPlayers: games[key].nbPlayers
       });
     } else {
-      socket.emit('erreur');
+      socket.emit('erreur', { message: 'The game is full' });
     }
   });
 

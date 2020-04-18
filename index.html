@@ -1,120 +1,202 @@
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ping Pong</title>
+  </head>
+  <style>
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  </style>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ping Pong</title>
-</head>
-<style>
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-</style>
+  <body style="background-color: white; position: fixed;">
+    <div id="divGame"></div>
 
-<body style="background-color: white; position: fixed;">
-  <div id="divGame"></div>
-
-  <div class="wrapper">
-    <div class="jumbotron jumbotron" style="padding: 10px 50px 50px 50px; height: 100vh;">
-      <div class="container">
-        <h1 class="display-4">Ping Pong</h1>
-        <p class="lead">Play with AI.</p>
-        <button type="button" class="btn btn-primary" id="startGame">
-          Play with AI
-        </button>
-      </div>
-      <br />
-      <hr />
-      <div class="container">
-        <p class="lead">Play with friend.</p>
-        <div id="createDiv">
-          <h5>Create game</h5>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <label class="input-group-text" style="background-color: #318CE7; color: white;"
-                for="nbPlayers">Players</label>
-            </div>
-            <select class="custom-select" id="nbPlayers">
-              <option value="2" selected>Two</option>
-              <option value="4">Four</option>
-            </select>
-          </div>
-          <div class="input-group mb-3">
-            <input type="text" name="user" id="usernameCreate" class="form-control" placeholder="Username"
-              aria-label="Username" aria-describedby="basic-addon2" />
-            <div class="input-group-append">
-              <button class="btn btn-primary" id="create" type="button">
-                Create
-              </button>
-            </div>
+    <div class="wrapper">
+      <div
+        class="jumbotron jumbotron"
+        style="padding: 5px 50px 50px 50px; height: 100vh;"
+      >
+        <div class="container">
+          <h1
+            class="display-4"
+            style="text-align: center; margin-bottom: 15px;"
+          >
+            Ping Pong
+          </h1>
+          <p class="lead" style="text-align: center;">
+            " Try to get 3 Points "
+          </p>
+          <hr />
+          <div style="display: flex; justify-content: space-between;">
+            <p class="lead">Play with AI.</p>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="startGame"
+              style="height: 40px; width: 100px;"
+            >
+              Start
+            </button>
           </div>
         </div>
-        <div id="joinDiv">
-          <h5>Join game</h5>
-          <input type="text" id="usernameJoin" placeholder="Username" class="form-control" aria-label="Default"
-            aria-describedby="inputGroup-sizing-default" />
-          <input type="text" id="secretIdJoin" placeholder="Secret key" class="form-control" aria-label="Default"
-            aria-describedby="inputGroup-sizing-default" />
-          <button type="button" id="join" class="btn btn-primary" style="width: 100%;">
-            Join
+        <hr />
+        <div class="container">
+          <p class="lead">Play with friend.</p>
+          <div id="createDiv">
+            <h5>Create game</h5>
+            <div
+              class="input-group mb-3"
+              style="margin-bottom: 0px !important;"
+            >
+              <div class="input-group-prepend">
+                <label
+                  class="input-group-text"
+                  style="background-color: #318ce7; color: white;"
+                  for="nbPlayers"
+                  >Players</label
+                >
+              </div>
+              <select class="custom-select" id="nbPlayers">
+                <option value="2" selected>Two</option>
+                <option value="4">Four</option>
+              </select>
+            </div>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                name="user"
+                id="usernameCreate"
+                class="form-control"
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon2"
+              />
+              <div class="input-group-append">
+                <button class="btn btn-primary" id="create" type="button">
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div id="joinDiv">
+            <h5>Join game</h5>
+            <input
+              type="text"
+              id="usernameJoin"
+              placeholder="Username"
+              class="form-control"
+              aria-label="Default"
+              aria-describedby="inputGroup-sizing-default"
+            />
+            <input
+              type="text"
+              id="secretIdJoin"
+              placeholder="Secret key"
+              class="form-control"
+              aria-label="Default"
+              aria-describedby="inputGroup-sizing-default"
+            />
+            <button
+              type="button"
+              id="join"
+              class="btn btn-primary"
+              style="width: 100%;"
+            >
+              Join
+            </button>
+          </div>
+        </div>
+        <div class="container players" style="display: none;">
+          <h4 id="secretId">Secret key :&nbsp;</h4>
+          <p class="lead two" id="player1">
+            <span style="font-size: 30px; color: #ffff00;">&#9632;&nbsp;</span
+            >Player 1 :&nbsp;
+          </p>
+          <p class="lead two" id="player2">
+            <span style="font-size: 30px; color: #0000cc;">&#9632;&nbsp;</span
+            >Player 2 :&nbsp;
+          </p>
+          <p class="lead four" id="player3">
+            <span style="font-size: 30px; color: #cc0000;">&#9632;&nbsp;</span
+            >Player 3 :&nbsp;
+          </p>
+          <p class="lead four" id="player4">
+            <span style="font-size: 30px; color: #33ff66;">&#9632;&nbsp;</span
+            >Player 4 :&nbsp;
+          </p>
+
+          <button
+            type="button"
+            id="startGameWithFriend"
+            class="btn btn-primary"
+            disabled
+            style="width: 100%; display: none;"
+          >
+            Start
           </button>
         </div>
       </div>
-      <div class="container players" style="display: none;">
-        <h4 id="secretId">Secret key :&nbsp;</h4>
-        <p class="lead two" id="player1"><span style='font-size:30px;color:#FFFF00'>&#9632;&nbsp;</span>Player 1 :&nbsp;
-        </p>
-        <p class="lead two" id="player2"><span style='font-size:30px;color:#0000CC'>&#9632;&nbsp;</span>Player 2 :&nbsp;
-        </p>
-        <p class="lead four" id="player3"><span style='font-size:30px;color:#CC0000'>&#9632;&nbsp;</span>Player 3
-          :&nbsp;</p>
-        <p class="lead four" id="player4"><span style='font-size:30px;color:#33FF66'>&#9632;&nbsp;</span>Player 4
-          :&nbsp;</p>
-
-        <button type="button" id="startGameWithFriend" class="btn btn-primary" disabled
-          style="width: 100%; display: none;">
-          Start
+      <div
+        id="win"
+        class="alert alert-success"
+        style="
+          position: absolute;
+          margin-left: 500px;
+          margin-top: 505px;
+          width: 705px;
+          display: none;
+        "
+      >
+        You win the game.
+        <button
+          href="#"
+          style="float: right;"
+          class="btn btn-md btn-success btnRestart"
+          id="restartWin"
+        >
+          Restart
+        </button>
+      </div>
+      <div
+        id="lost"
+        class="alert alert-danger"
+        style="
+          position: absolute;
+          margin-left: 500px;
+          margin-top: 505px;
+          width: 705px;
+          display: none;
+        "
+      >
+        You lost the game.
+        <button
+          style="float: right;"
+          class="btn btn-md btn-danger btnRestart"
+          id="restartLost"
+        >
+          Restart
         </button>
       </div>
     </div>
-    <div id="win" class="alert alert-success" style="
-          position: absolute;
-          margin-left: 500px;
-          margin-top: 505px;
-          width: 705px;
-          display: none;
-        ">
-      You win the game.
-      <button href="#" style="float: right;" class="btn btn-md btn-success btnRestart" id="restartWin">
-        Restart
-      </button>
-    </div>
-    <div id="lost" class="alert alert-danger" style="
-          position: absolute;
-          margin-left: 500px;
-          margin-top: 505px;
-          width: 705px;
-          display: none;
-        ">
-      You lost the game.
-      <button style="float: right;" class="btn btn-md btn-danger btnRestart" id="restartLost">
-        Restart
-      </button>
-    </div>
-  </div>
-</body>
-<script src="/socket.io/socket.io.js"></script>
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
-<script src="js/game.js"></script>
-<script src="js/display.js"></script>
-<script src="js/control.js"></script>
-<script src="js/ai.js"></script>
-<script src="js/player.js"></script>
-<script src="js/ball.js"></script>
-<script src="js/script.js"></script>
-
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/display.js"></script>
+  <script src="js/control.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/ball.js"></script>
+  <script src="js/script.js"></script>
 </html>

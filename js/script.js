@@ -2,11 +2,10 @@
   let requestAnimId;
 
   const socket = io();
-  let leftTop = new Player(30, 175, 'left');
-  let rightTop = new Player(660, 175, 'right');
-
-  // let leftDown = new Player(30, 300, 'left');
-  // let rightDown = new Player(660, 300, 'right');
+  let leftTop = new Player(30, 175, 'left', '#FFFF00');
+  let rightTop = new Player(660, 175, 'right', '#0000CC');
+  let leftDown = new Player(30, 300, 'left', '#CC0000');
+  let rightDown = new Player(660, 300, 'right', '#33FF66');
 
   // Default game 
   let ball = new Ball();
@@ -48,8 +47,15 @@
         game.isWin();
         rightTop.move(game.control, game.groundHeight);
         socket.emit('movePlayer', { y: rightTop.getY(), n: 2, key: game.secretId })
+      } else if (game.isThree) {
+        game.isWin();
+        leftDown.move(game.control, game.groundHeight);
+        socket.emit('movePlayer', { y: leftDown.getY(), n: 3, key: game.secretId })
+      } else if (game.isFour) {
+        game.isWin();
+        rightDown.move(game.control, game.groundHeight);
+        socket.emit('movePlayer', { y: rightDown.getY(), n: 4, key: game.secretId })
       }
-      // leftTop.move(game.control, game.groundHeight);
     }
     ball.collideBallWithPlayersAndAction(game.players);
     requestAnimId = window.requestAnimationFrame(main);
@@ -71,18 +77,25 @@
   });
 
   // Etape 1 : create game
-  $('#create').click(() => {
-    $('#startGame').prop('disabled', true);
-    $('#joinDiv').css('display', 'none');
-    $('#createDiv').css('display', 'none');
-    const username = $('#usernameCreate').val();
-    const nbPlayers = $('#nbPlayers').val();
-    if (nbPlayers == '2') $('.four').css('display', 'none');
-    // set as creator 
-    $('.players').css('display', 'block');
-    $('#player1').append(username);
 
-    socket.emit('creation', { username, nbPlayers });
+  $('#create').click(() => {
+    const username = $('#usernameCreate').val();
+    if (username.length > 0) {
+      $('#startGame').prop('disabled', true);
+      $('#joinDiv').css('display', 'none');
+      $('#createDiv').css('display', 'none');
+      const nbPlayers = $('#nbPlayers').val();
+      if (nbPlayers == '2') {
+        $('.four').css('display', 'none');
+      } else {
+        game.players.push(...[leftDown, rightDown]);
+      }
+      // set as creator 
+      $('.players').css('display', 'block');
+      $('#player1').append(username);
+
+      socket.emit('creation', { username, nbPlayers });
+    }
   });
 
   //  Receive secret key
@@ -101,13 +114,16 @@
   $('#join').click(() => {
     const username = $('#usernameJoin').val();
     const secretId = $('#secretIdJoin').val();
-    socket.emit('joining', { username, secretId });
+    if (username && secretId) {
+      socket.emit('joining', { username, secretId });
+    }
   });
 
   // joined the game
   socket.on('joined', (data) => {
     console.log(data);
     $(`#player${data.num}`).append(data.username);
+    socket.emit('information', { x: ball.getX(), y: ball.getY(), key: game.secretId, s1: game.leftScore, s2: game.rightScore });
     if (data.num == parseInt(data.nbPlayers)) {
       $('#startGameWithFriend').prop('disabled', false);
     }
@@ -126,24 +142,28 @@
     $('#secretId').append(data.secretId);
     $('#startGameWithFriend').css('display', 'none');
     $('.btnRestart').css('display', 'none');
-    if (data.nbPlayers == '2') $('.four').css('display', 'none');
+    if (data.nbPlayers == '2') {
+      $('.four').css('display', 'none');
+    } else {
+      game.players.push(...[leftDown, rightDown]);
+    }
     game.secretId = data.secretId;
     const len = data.players.length;
     for (let i = 1; i <= len; ++i) {
       $(`#player${i}`).append(data.players[i - 1]);
     }
-    console.log(len);
+    console.log('lenght', len);
     if (len == 2) {
       game.onStartJoinWithoutAi(rightTop);
       game.control.setPlayer(rightTop);
       game.isTwo = true;
     } else if (len == 3) {
-      game.onStartJoinWithoutAI(rightTop);
-      game.control.setPlayer(rightTop);
+      game.onStartJoinWithoutAi(leftDown);
+      game.control.setPlayer(leftDown);
       game.isThree = true;
     } else {
-      game.onStartJoinWithoutAI(rightTop);
-      game.control.setPlayer(rightTop);
+      game.onStartJoinWithoutAi(rightDown);
+      game.control.setPlayer(rightDown);
       game.isFour = true;
     }
   });

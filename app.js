@@ -1,10 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-
 const app = express();
 const server = require('http').Server(app);
-
 const PORT = process.env.PORT || 3000;
 const io = require('socket.io')(server);
 app.use(express.static('.'));
@@ -14,7 +12,6 @@ app.get('/', (req, res) => {
 });
 
 let games = {};
-
 io.on('connection', function (socket) {
   console.log('a user connected');
 
@@ -35,7 +32,7 @@ io.on('connection', function (socket) {
     console.log('joining', data);
     console.log('find', games[data.secretId]);
     const key = data.secretId;
-    if (games[key].players.length < games[key].nbPlayers) {
+    if (games[key] && games[key].players.length < games[key].nbPlayers) {
       games[key].players.push(data.username);
       socket.join(key);
       socket.in(key).emit('joined',
@@ -64,7 +61,6 @@ io.on('connection', function (socket) {
     const { y, n, key } = data;
     socket.in(key).emit('movePlayer', { y, n });
   });
-
 
   socket.on('restart', function (data) {
     const { key } = data;

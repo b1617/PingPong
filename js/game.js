@@ -19,7 +19,6 @@ class Game {
       this.restartLostGameButton = null,
       this.startGameButton = null,
       this.startGameWithFriend = null,
-      this.createGameWithFriend = null,
       this.default = true,
       this.single = false,
       this.mutli = false,
@@ -45,7 +44,6 @@ class Game {
     this.divGame = document.getElementById('divGame');
     this.startGameButton = document.getElementById('startGame');
     this.startGameWithFriend = document.getElementById('startGameWithFriend');
-    this.createGameWithFriend = document.getElementById('create');
     this.restartGameWinButton = document.getElementById('restartWin');
     this.restartGameLostButton = document.getElementById('restartLost');
     this.groundLayer = new Display().createLayer(
@@ -113,10 +111,8 @@ class Game {
     this.displayBall();
   }
 
-
-
   isWin() {
-    if (this.leftScore === 2 || this.rightScore === 2 && (this.gameOn)) {
+    if ((this.leftScore === 2 || this.rightScore === 2) && this.gameOn) {
       this.gameOn = false;
       this.ball.inGame = false;
       if (this.isOne || this.isThree) {
@@ -182,8 +178,6 @@ class Game {
   }
 
   onStartGame(player) {
-    //game.reinitGame();
-    console.log('on start game');
     this.gameOn = true;
     this.ball.inGame = true;
     this.ball.posX = player.posX + player.width;
@@ -246,14 +240,12 @@ class Game {
     this.single = false;
     this.mutli = true;
     this.gameOn = true;
-    // player.ai = false;
     player.initPos();
     this.onStartGame(player);
     this.ball.posX += player.originalPosition === 'left' ? 100 : -100;
   }
 
   onRestartGame = (e) => {
-    console.log('call on restart this.game');
     this.reinitGame();
     this.onStartGame(this.players[0]);
   }

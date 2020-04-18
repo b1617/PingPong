@@ -10,7 +10,6 @@ class Ball {
             this.directionX = 1,
             this.directionY = 1,
             this.game = null,
-            this.wait = false,
             this.wallSound = new Audio('../sound/wall.ogg')
     }
 
@@ -38,10 +37,11 @@ class Ball {
 
     lostBall() {
         for (const player of this.game.players) {
-            if (this.lost(player) && !this.wait) {
+            if (this.lost(player) && this.inGame) {
                 console.log('lost ball', player);
                 player.originalPosition === 'left' ? this.game.rightScore++ : this.game.leftScore++;
                 if (!this.game.default && (this.game.leftScore === 2 || this.game.rightScore === 2)) {
+                    console.log('is finish');
                     this.game.gameOn = false;
                     this.inGame = false;
                     if (!this.game.default && (this.game.single || this.game.isOne || this.game.isThree)) {

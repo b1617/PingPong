@@ -19,7 +19,7 @@
   <div id="divGame"></div>
 
   <div class="wrapper">
-    <div class="jumbotron jumbotron" style="padding: 30px 50px 50px 50px; height: 100vh;">
+    <div class="jumbotron jumbotron" style="padding: 10px 50px 50px 50px; height: 100vh;">
       <div class="container">
         <h1 class="display-4">Ping Pong</h1>
         <p class="lead">Play with AI.</p>
@@ -66,12 +66,17 @@
       </div>
       <div class="container players" style="display: none;">
         <h4 id="secretId">Secret key :&nbsp;</h4>
-        <p class="lead two" id="player1">Player 1 :&nbsp;</p>
-        <p class="lead two" id="player2">Player 2 :&nbsp;</p>
-        <p class="lead four" id="player3">Player 3 :&nbsp;</p>
-        <p class="lead four" id="player4">Player 4 :&nbsp;</p>
+        <p class="lead two" id="player1"><span style='font-size:30px;color:#FFFF00'>&#9632;&nbsp;</span>Player 1 :&nbsp;
+        </p>
+        <p class="lead two" id="player2"><span style='font-size:30px;color:#0000CC'>&#9632;&nbsp;</span>Player 2 :&nbsp;
+        </p>
+        <p class="lead four" id="player3"><span style='font-size:30px;color:#CC0000'>&#9632;&nbsp;</span>Player 3
+          :&nbsp;</p>
+        <p class="lead four" id="player4"><span style='font-size:30px;color:#33FF66'>&#9632;&nbsp;</span>Player 4
+          :&nbsp;</p>
 
-        <button type="button" id="startGameWithFriend" class="btn btn-primary" style="width: 100%; display: none;">
+        <button type="button" id="startGameWithFriend" class="btn btn-primary" disabled
+          style="width: 100%; display: none;">
           Start
         </button>
       </div>

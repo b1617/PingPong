@@ -1,8 +1,8 @@
 class Player {
-  constructor(posX, posY, originalPosition) {
+  constructor(posX, posY, originalPosition, color) {
     this.width = 10,
       this.height = 50,
-      this.color = '#FFFFFF',
+      this.color = color,
       this.posX = posX, // 30
       this.posY = posY, // 200
       this.goUp = false,

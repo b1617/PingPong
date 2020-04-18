@@ -40,7 +40,7 @@ class Display {
     if (y != undefined) layer.posY = y;
 
     layer.canvas.style.position = 'absolute';
-    layer.canvas.style.border = '3px solid red';
+    layer.canvas.style.border = '2px solid red';
 
     if (x != undefined) layer.canvas.style.left = x;
 

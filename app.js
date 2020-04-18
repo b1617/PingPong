@@ -47,7 +47,8 @@ io.on('connection', function (socket) {
         nbPlayers: games[key].nbPlayers
       });
     } else {
-      socket.emit('erreur', { message: 'The game is full' });
+      const message = games[key] ? 'This game is full' : 'Wrong secret key';
+      socket.emit('erreur', { message });
     }
   });
 

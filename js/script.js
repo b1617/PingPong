@@ -152,7 +152,11 @@
 
   socket.on('erreur', (data) => {
     console.log('errr');
-    alert(data.message);
+    $('#divErreur').css('display', 'block');
+    $('#erreur').text(data.message);
+    setTimeout(() => {
+      $('#divErreur').css('display', 'none');
+    }, 3000);
   });
 
   socket.on('createOnJoin', (data) => {

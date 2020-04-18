@@ -55,23 +55,21 @@ io.on('connection', function (socket) {
     console.log('user disconnected');
   });
 
-  socket.on('moveBall', function (data) {
-    const { x, y } = data;
-    socket.broadcast.emit('moveBall', { x, y });
+  socket.on('information', function (data) {
+    const { x, y, s1, s2, key } = data;
+    socket.in(key).emit('information', { x, y, s1, s2 });
   });
 
   socket.on('movePlayer', function (data) {
-    const { y, n } = data;
-    socket.broadcast.emit('movePlayer', { y, n });
+    const { y, n, key } = data;
+    socket.in(key).emit('movePlayer', { y, n });
   });
 
-  socket.on('score', function (data) {
-    const { s1, s2 } = data;
-    socket.broadcast.emit('score', { s1, s2 });
-  });
 
   socket.on('restart', function (data) {
-    socket.broadcast.emit('restart');
+    const { key } = data;
+    console.log(key);
+    socket.in(key).emit('restart');
   });
 });
 

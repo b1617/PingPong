@@ -10,11 +10,19 @@ class Ball {
             this.directionX = 1,
             this.directionY = 1,
             this.game = null,
+            this.wait = false,
             this.wallSound = new Audio('../sound/wall.ogg')
     }
 
     getPos() {
         return { x: this.posX, y: this.posY };
+    }
+
+    getX() {
+        return this.posX;
+    }
+    getY() {
+        return this.posY;
     }
 
     setPos(x, y) {
@@ -27,22 +35,27 @@ class Ball {
         this.posX = 200;
     }
 
+
     lostBall() {
         for (const player of this.game.players) {
-            if (this.lost(player)) {
+            if (this.lost(player) && !this.wait) {
                 console.log('lost ball', player);
                 player.originalPosition === 'left' ? this.game.rightScore++ : this.game.leftScore++;
-                if (!this.game.default && (this.game.leftScore === 1 || this.game.rightScore === 1)) {
+                if (!this.game.default && (this.game.leftScore === 2 || this.game.rightScore === 2)) {
                     this.game.gameOn = false;
                     this.inGame = false;
-                    if (this.game.single) {
+                    if (!this.game.default && (this.game.single || this.game.isOne || this.game.isThree)) {
                         let id = player.originalPosition === 'right' ? 'win' : 'lost';
+                        console.log('calling on lost ball');
+                        document.getElementById(id).style.display = 'block';
+                    } else if (!this.game.default && (this.game.single || this.game.isTwo || this.game.isFour)) {
+                        let id = player.originalPosition === 'left' ? 'win' : 'lost';
                         console.log('calling on lost ball');
                         document.getElementById(id).style.display = 'block';
                     }
                 } else {
-                    this.inGame = false;
                     if (this.game.single || this.game.default) {
+                        this.inGame = false;
                         if (player.ai) {
                             setTimeout(this.game.startBall(player), 3000);
                         }
@@ -50,12 +63,17 @@ class Ball {
                             setTimeout(this.game.onStartGame(player), 3000);
                         }
                     } else {
-                        console.log('todo mutli')
+                        if (this.game.isOne) {
+                            console.log('todo mutli')
+                            this.inGame = false;
+                            setTimeout(this.game.startBall(player), 3000);
+                        }
                     }
                 }
             }
         }
         this.game.clearLayer('SCORE');
+        // console.log('score', this.game.leftScore, this.game.rightScore);
         this.game.displayScore(this.game.leftScore, this.game.rightScore);
     }
 
@@ -68,13 +86,15 @@ class Ball {
     }
 
     bounce(width, height) {
-        if (this.posX > width || this.posX < 0) {
-            this.directionX = -this.directionX;
-            // if (!this.game.default) this.wallSound.play();
-        }
-        if (this.posY > height || this.posY < 0) {
-            this.directionY = -this.directionY;
-            // if (!this.game.default) this.wallSound.play();
+        if (this.game.default || this.game.single || this.game.isCreator) {
+            if (this.posX > width || this.posX < 0) {
+                this.directionX = -this.directionX;
+                // if (!this.game.default) this.wallSound.play();
+            }
+            if (this.posY > height || this.posY < 0) {
+                this.directionY = -this.directionY;
+                // if (!this.game.default) this.wallSound.play();
+            }
         }
     }
 

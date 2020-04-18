@@ -30,7 +30,7 @@ class Game {
         KEYUP: 38
       },
       this.ball = ball,
-
+      this.secretId = null,
       this.players = players,
       this.isCreator = false,
       this.isBall = false,
@@ -111,6 +111,22 @@ class Game {
     this.ball.move();
     this.ball.bounce(this.groundWidth, this.groundHeight);
     this.displayBall();
+  }
+
+
+
+  isWin() {
+    if (this.leftScore === 2 || this.rightScore === 2 && (this.gameOn)) {
+      this.gameOn = false;
+      this.ball.inGame = false;
+      if (this.isOne || this.isThree) {
+        let id = this.leftScore === 2 ? 'win' : 'lost';
+        document.getElementById(id).style.display = 'block';
+      } else {
+        let id = this.rightScore === 2 ? 'win' : 'lost';
+        document.getElementById(id).style.display = 'block';
+      }
+    }
   }
 
   displayPlayers() {
@@ -224,14 +240,16 @@ class Game {
   }
 
   onStartJoinWithoutAi(player) {
+    for (let player of this.players) player.ai = false;
     this.reinitGame();
     this.default = false;
     this.single = false;
     this.mutli = true;
     this.gameOn = true;
-    player.ai = false;
+    // player.ai = false;
     player.initPos();
     this.onStartGame(player);
+    this.ball.posX += player.originalPosition === 'left' ? 100 : -100;
   }
 
   onRestartGame = (e) => {

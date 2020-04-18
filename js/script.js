@@ -26,7 +26,7 @@
     game.clearLayer(game.playersBallLayer);
     game.displayPlayers();
     game.moveBall();
-    if (ball.inGame) {
+    if (ball.inGame && (game.single || game.default || (game.mutli && game.isCreator))) {
       ball.lostBall();
     }
     // Default
@@ -39,15 +39,15 @@
       aiRight.move(game.groundHeight);
     } else if (game.mutli) {
       if (game.isCreator) {
-        socket.emit('moveBall', ball.getPos())
+        socket.emit('information', { key: game.secretId, x: ball.getX(), y: ball.getY(), s1: game.leftScore, s2: game.rightScore })
       }
-
       if (game.isOne) {
         leftTop.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: leftTop.getY(), n: 1 })
+        socket.emit('movePlayer', { y: leftTop.getY(), n: 1, key: game.secretId })
       } else if (game.isTwo) {
+        game.isWin();
         rightTop.move(game.control, game.groundHeight);
-        socket.emit('movePlayer', { y: rightTop.getY(), n: 2 })
+        socket.emit('movePlayer', { y: rightTop.getY(), n: 2, key: game.secretId })
       }
       // leftTop.move(game.control, game.groundHeight);
     }
@@ -65,12 +65,9 @@
   $('.btnRestart').click(() => {
     $('#win').css('display', 'none');
     $('#lost').css('display', 'none');
-    // if (game.aiMode) {
-    //   game.control.onRestartGame();
-    // } else {
-    //   socket.emit('restart');
-    //   game.control.onRestartGame();
-    // }
+    if (game.isOne) {
+      socket.emit('restart', { key: game.secretId });
+    }
   });
 
   // Etape 1 : create game
@@ -85,8 +82,6 @@
     $('.players').css('display', 'block');
     $('#player1').append(username);
 
-    // create default pos
-    // game.onStartGameWithoutAI(leftTop);
     socket.emit('creation', { username, nbPlayers });
   });
 
@@ -97,6 +92,7 @@
     game.control.setPlayer(leftTop);
     game.isOne = true;
     game.isBall = true;
+    game.secretId = data.secretId;
     $('#secretId').append(data.secretId);
     $('#startGameWithFriend').css('display', 'block');
   });
@@ -131,6 +127,7 @@
     $('#startGameWithFriend').css('display', 'none');
     $('.btnRestart').css('display', 'none');
     if (data.nbPlayers == '2') $('.four').css('display', 'none');
+    game.secretId = data.secretId;
     const len = data.players.length;
     for (let i = 1; i <= len; ++i) {
       $(`#player${i}`).append(data.players[i - 1]);
@@ -151,9 +148,16 @@
     }
   });
 
-  socket.on('moveBall', (data) => {
-    const { x, y } = data;
+  let lastScore = { s1: 0, s2: 0 };
+  socket.on('information', (data) => {
+    const { x, y, s1, s2 } = data;
     ball.setPos(x, y);
+    if (lastScore.s1 !== s1 || lastScore.s2 !== s2) {
+      lastScore.s1 = s1; lastScore.s2 = s2;
+      game.leftScore = s1; game.rightScore = s2;
+      game.clearLayer('SCORE');
+      game.displayScore(s1, s2);
+    }
   });
 
   socket.on('movePlayer', (data) => {
@@ -163,46 +167,11 @@
 
   $('#startGameWithFriend').click(() => {
     game.onStartGameWithoutAI(leftTop);
-    //   socket.emit('score', {
-    //     s1: game.playerOne.score,
-    //     s2: game.playerTwo.score
-    //   });
-    // });
   });
 
-  // $('#score').change(() => {
-  //   console.log('ss');
-  //   socket.emit('score', {
-  //     s1: game.playerOne.score,
-  //     s2: game.playerTwo.score
-  //   });
-  // });
-
-
-
-  // socket.on('restart', (data) => {
-  //   $('#win').css('display', 'none');
-  //   $('#lost').css('display', 'none');
-  //   game.gameOn = true;
-  // });
-
-  // let lastScore = { s1: 0, s2: 0 };
-  // socket.on('score', (data) => {
-  //   const { s1, s2 } = data;
-  //   if (lastScore.s1 !== s1 || lastScore.s2 !== s2) {
-  //     lastScore.s1 = s1;
-  //     lastScore.s2 = s2;
-  //     if (lastScore.s1 === 3 || lastScore.s2 === 3) {
-  //       if (s2 == 3) {
-  //         $('#win').css('display', 'block');
-  //       } else {
-  //         $('#lost').css('display', 'block');
-  //       }
-  //       game.gameOn = false;
-  //       clearInterval(timer);
-  //     }
-  //     game.scoreLayer.clear();
-  //     game.displayScore(s2, s1);
-  //   }
-  // });
+  socket.on('restart', (data) => {
+    $('#win').css('display', 'none');
+    $('#lost').css('display', 'none');
+    game.gameOn = true;
+  });
 })();

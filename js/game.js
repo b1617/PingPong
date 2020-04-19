@@ -113,7 +113,7 @@ class Game {
   }
 
   isWin() {
-    if ((this.leftScore === 2 || this.rightScore === 2) && this.gameOn) {
+    if ((this.leftScore === 3 || this.rightScore === 3) && this.gameOn) {
       this.gameOn = false;
       this.ball.inGame = false;
       if (this.isOne || this.isThree) {

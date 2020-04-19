@@ -113,14 +113,14 @@ class Game {
   }
 
   isWin() {
-    if ((this.leftScore === 2 || this.rightScore === 2) && this.gameOn) {
+    if ((this.leftScore === 3 || this.rightScore === 3) && this.gameOn) {
       this.gameOn = false;
       this.ball.inGame = false;
       if (this.isOne || this.isThree) {
-        let id = this.leftScore === 2 ? 'win' : 'lost';
+        let id = this.leftScore === 3 ? 'win' : 'lost';
         document.getElementById(id).style.display = 'block';
       } else {
-        let id = this.rightScore === 2 ? 'win' : 'lost';
+        let id = this.rightScore === 3 ? 'win' : 'lost';
         document.getElementById(id).style.display = 'block';
       }
     }

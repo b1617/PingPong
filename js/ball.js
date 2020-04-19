@@ -43,7 +43,7 @@ class Ball {
           : this.game.leftScore++;
         if (
           !this.game.default &&
-          (this.game.leftScore === 2 || this.game.rightScore === 2)
+          (this.game.leftScore === 3 || this.game.rightScore === 3)
         ) {
           console.log('is finish');
           this.game.gameOn = false;
